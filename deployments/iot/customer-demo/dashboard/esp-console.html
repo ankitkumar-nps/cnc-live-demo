@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Metalcloud RPC Control Dashboard</title>
+<style>
+  :root{--bg:#0f1419;--bg2:#161c24;--bg3:#1e2630;--bd:#2a3441;--tx:#e6edf3;--tx2:#9fb0c0;--tx3:#6b7c8d;--ac:#2f81f7;--gn:#3fb950;--rd:#f85149;--am:#d29922}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tx);font-size:13px}
+  .hidden{display:none!important}
+  /* login */
+  #gate{display:flex;align-items:center;justify-content:center;height:100vh}
+  .card{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:26px;width:360px}
+  .card h1{font-size:17px;margin:0 0 4px}
+  .card p{color:var(--tx3);margin:0 0 18px;font-size:12px}
+  label{display:block;font-size:11px;color:var(--tx2);margin:10px 0 4px}
+  input,textarea,select{width:100%;background:var(--bg3);border:1px solid var(--bd);border-radius:7px;color:var(--tx);padding:8px 10px;font-size:13px;outline:none;font-family:inherit}
+  input:focus,textarea:focus,select:focus{border-color:var(--ac)}
+  button{background:var(--ac);border:none;color:#fff;border-radius:7px;padding:8px 14px;font-size:13px;cursor:pointer;font-weight:500}
+  button:hover{filter:brightness(1.1)} button:disabled{opacity:.5;cursor:not-allowed}
+  .btn2{background:var(--bg3);border:1px solid var(--bd);color:var(--tx2)}
+  .btn-rd{background:var(--rd)} .btn-gn{background:var(--gn)}
+  .err{color:var(--rd);font-size:12px;margin-top:10px;min-height:16px}
+  /* app */
+  #app{height:100vh;display:flex;flex-direction:column}
+  header{background:var(--bg2);border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  header .title{font-weight:600}
+  header .sp{flex:1}
+  .pill{font-size:11px;font-family:monospace;background:var(--bg3);border:1px solid var(--bd);border-radius:99px;padding:3px 10px;color:var(--tx2)}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:99px;background:var(--tx3);margin-right:5px}
+  .dot.on{background:var(--gn)} .dot.off{background:var(--rd)}
+  main{flex:1;display:grid;grid-template-columns:230px 1fr;min-height:0}
+  .side{background:var(--bg2);border-right:1px solid var(--bd);padding:12px;overflow:auto}
+  .side h3{font-size:11px;text-transform:uppercase;color:var(--tx3);letter-spacing:.05em;margin:14px 0 6px}
+  .filelist{display:flex;flex-direction:column;gap:2px}
+  .fitem{padding:5px 8px;border-radius:6px;font-family:monospace;font-size:12px;color:var(--tx2);cursor:pointer}
+  .fitem:hover{background:var(--bg3)} .fitem.sel{background:var(--ac);color:#fff}
+  .editor{display:flex;flex-direction:column;min-width:0}
+  .ed-bar{padding:8px 12px;border-bottom:1px solid var(--bd);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .ed-bar .fname{font-family:monospace;color:var(--tx2);font-size:12px}
+  #code{flex:1;border:none;border-radius:0;background:#0b0f14;color:#d6e2ee;font-family:Consolas,monospace;font-size:13px;padding:12px;resize:none;line-height:1.5;white-space:pre;overflow:auto}
+  .out{height:170px;border-top:1px solid var(--bd);background:#0b0f14;overflow:auto;padding:8px 12px;font-family:Consolas,monospace;font-size:12px;white-space:pre-wrap}
+  .out .o-cmd{color:var(--ac)} .out .o-ok{color:var(--gn)} .out .o-err{color:var(--rd)} .out .o-dim{color:var(--tx3)}
+  .row{display:flex;gap:8px;align-items:center}
+  .sm{font-size:11px;padding:5px 10px}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="gate">
+  <div class="card">
+    <h1>Metalcloud RPC Control Dashboard</h1>
+    <p>Google login? Use <b>Paste token</b>. Email+password account? Use that tab.</p>
+    <div class="row" style="margin-bottom:6px">
+      <button id="tabTok" class="sm" style="flex:1" onclick="setMode('token')">Paste token (Google login)</button>
+      <button id="tabPw" class="btn2 sm" style="flex:1" onclick="setMode('pw')">Email + password</button>
+    </div>
+    <label>ThingsBoard host</label>
+    <input id="gHost" value="https://thingsboard.cloud"/>
+
+    <div id="mTok">
+      <label>JWT token <span style="color:var(--tx3)">(from your logged-in ThingsBoard browser)</span></label>
+      <textarea id="gJwt" rows="3" placeholder="paste the long token here"></textarea>
+      <label>Refresh token <span style="color:var(--tx3)">(optional — keeps you logged in)</span></label>
+      <input id="gRef" placeholder="optional"/>
+      <details style="margin-top:8px"><summary style="cursor:pointer;color:var(--tx2);font-size:11px">How to get the token</summary>
+        <div style="font-size:11px;color:var(--tx3);line-height:1.6;margin-top:6px">
+          1. Open <b>thingsboard.cloud</b> (already logged in via Google).<br>
+          2. Press <b>F12</b> → <b>Application</b> tab → <b>Local Storage</b> → <code>https://thingsboard.cloud</code>.<br>
+          3. Copy the value of <code>jwt_token</code> into the box above (and <code>refresh_token</code> into the optional box).
+        </div>
+      </details>
+    </div>
+
+    <div id="mPw" class="hidden">
+      <label>Email</label>
+      <input id="gUser" value="ankitkumar8271170756@gmail.com" autocomplete="username"/>
+      <label>Password</label>
+      <input id="gPass" type="password" autocomplete="current-password"/>
+    </div>
+
+    <label>Device name (or device id)</label>
+    <input id="gDev" value="ESP32-Gateway-01"/>
+    <div style="margin-top:16px"><button id="gBtn" style="width:100%">Connect</button></div>
+    <div class="err" id="gErr"></div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app" class="hidden">
+  <header>
+    <span class="title">Metalcloud RPC Control Dashboard</span>
+    <span class="pill" id="hDev">—</span>
+    <span class="pill"><span class="dot" id="hDot"></span><span id="hState">unknown</span></span>
+    <span class="sp"></span>
+    <button class="btn2 sm" onclick="getLogs()">Logs</button>
+    <button class="btn2 sm" id="bLive" onclick="toggleLive()">&#9654; Live</button>
+    <button class="btn2 sm" onclick="loadConfig()">Settings</button>
+    <button class="btn2 sm" onclick="wifiInfo()">Wi-Fi</button>
+    <button class="btn2 sm" onclick="raiseAP()">&#128246; Hotspot</button>
+    <button class="btn-rd sm" onclick="doReboot()">Reboot</button>
+    <button class="btn2 sm" onclick="logout()">Logout</button>
+  </header>
+  <main>
+    <div class="side">
+      <div class="row">
+        <button class="btn2 sm" style="flex:1" onclick="listFiles()">&#8635; Refresh</button>
+        <button class="btn2 sm" style="flex:1" onclick="newFile()">&#43; New file</button>
+      </div>
+      <h3>Files on device</h3>
+      <div class="filelist" id="files"></div>
+    </div>
+    <div class="editor">
+      <div class="ed-bar">
+        <span class="fname" id="curFile">no file open</span>
+        <span class="sp"></span>
+        <button class="btn-gn sm" id="bSave" onclick="saveFile(false)" disabled>Save</button>
+        <button class="btn-gn sm" id="bSaveReboot" onclick="saveFile(true)" disabled>Save &amp; Reboot</button>
+        <button class="btn2 sm" id="bRun" onclick="runFile()" disabled>Run</button>
+        <button class="btn-rd sm" id="bDel" onclick="deleteFile()" disabled>Delete</button>
+      </div>
+      <textarea id="code" spellcheck="false" placeholder="Select a file on the left to view/edit it..."></textarea>
+      <div class="ed-bar" style="gap:6px">
+        <span style="font-family:monospace">&gt;</span>
+        <input id="conIn" spellcheck="false" autocomplete="off" style="flex:1;min-width:0"
+          placeholder='console: help | wifi ls | wifi add <ssid> <pass> | scan | mb 1 4 0 2 | bus 9600 N'/>
+        <button class="btn-gn sm" onclick="runConsole()">Run</button>
+      </div>
+      <div class="out" id="out"></div>
+    </div>
+  </main>
+</div>
+
+<script>
+const S = { host:"", jwt:"", refresh:"", user:"", pass:"", mode:"token", devName:"", devId:"", curFile:"" };
+
+function setMode(m){
+  S.mode=m;
+  document.getElementById('mTok').classList.toggle('hidden', m!=='token');
+  document.getElementById('mPw').classList.toggle('hidden', m!=='pw');
+  document.getElementById('tabTok').className = (m==='token'?'':'btn2 ')+'sm';
+  document.getElementById('tabPw').className  = (m==='pw'?'':'btn2 ')+'sm';
+}
+
+/* ---------- output log ---------- */
+function out(msg, cls){ const o=document.getElementById('out'); const d=document.createElement('div');
+  if(cls)d.className='o-'+cls; d.textContent=msg; o.appendChild(d); o.scrollTop=o.scrollHeight; }
+
+/* ---------- auth + api ---------- */
+async function login(){
+  S.host=document.getElementById('gHost').value.trim().replace(/\/$/,'');
+  S.devName=document.getElementById('gDev').value.trim();
+  const err=document.getElementById('gErr'); err.textContent='';
+  const btn=document.getElementById('gBtn'); btn.disabled=true; btn.textContent='Connecting…';
+  try{
+    if(S.mode==='token'){
+      S.jwt=document.getElementById('gJwt').value.trim().replace(/^Bearer\s+/i,'');
+      S.refresh=document.getElementById('gRef').value.trim();
+      if(!S.jwt) throw new Error('Paste your jwt_token (see "How to get the token").');
+    }else{
+      S.user=document.getElementById('gUser').value.trim();
+      S.pass=document.getElementById('gPass').value;
+      await doLogin();
+    }
+    await resolveDevice();
+    document.getElementById('gate').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    document.getElementById('hDev').textContent=S.devName+'  ·  '+S.devId.slice(0,8);
+    out('Connected to '+S.host+' as '+S.user,'dim');
+    out('Device: '+S.devName+' ('+S.devId+')','dim');
+    await listFiles();
+    pollState();
+  }catch(e){ err.textContent=e.message||String(e); }
+  btn.disabled=false; btn.textContent='Connect';
+}
+async function doLogin(){
+  const r=await fetch(S.host+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({username:S.user,password:S.pass})});
+  if(!r.ok) throw new Error('Login failed ('+r.status+'). Check host/email/password.');
+  const d=await r.json(); S.jwt=d.token; S.refresh=d.refreshToken||'';
+}
+async function reauth(){
+  if(S.refresh){
+    try{ const r=await fetch(S.host+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({refreshToken:S.refresh})});
+      if(r.ok){ const d=await r.json(); S.jwt=d.token; if(d.refreshToken)S.refresh=d.refreshToken; return true; }
+    }catch(e){}
+  }
+  if(S.mode==='pw'){ await doLogin(); return true; }
+  return false;
+}
+async function api(path,opts={}){
+  opts.headers=Object.assign({'X-Authorization':'Bearer '+S.jwt,'Content-Type':'application/json'},opts.headers||{});
+  let r=await fetch(S.host+path,opts);
+  if(r.status===401){
+    if(await reauth()){ opts.headers['X-Authorization']='Bearer '+S.jwt; r=await fetch(S.host+path,opts); }
+    else out('  session expired — Logout and paste a fresh jwt_token','err');
+  }
+  return r;
+}
+const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+async function resolveDevice(){
+  if(UUID.test(S.devName)){ S.devId=S.devName; return; }
+  const r=await api('/api/tenant/devices?deviceName='+encodeURIComponent(S.devName));
+  if(!r.ok) throw new Error('Device "'+S.devName+'" not found ('+r.status+').');
+  S.devId=(await r.json()).id.id;
+}
+
+/* ---------- RPC ---------- */
+async function rpc(method,params={},timeout=15000,silent=false){
+  if(!silent) out('» '+method+' '+(Object.keys(params).length?JSON.stringify(params).slice(0,120):''),'cmd');
+  const r=await api('/api/plugins/rpc/twoway/'+S.devId,{method:'POST',
+    body:JSON.stringify({method,params,timeout})});
+  if(r.status===408){ if(!silent) out('  device did not answer (offline/busy)','err'); throw new Error('timeout'); }
+  if(!r.ok){ if(!silent) out('  error '+r.status,'err'); throw new Error('rpc '+r.status); }
+  const txt=await r.text(); let res; try{res=JSON.parse(txt);}catch{res=txt;}
+  return res;
+}
+
+/* ---------- live serial/log viewer (auto-refresh) ---------- */
+let _liveTimer=null;
+async function liveTick(){
+  try{
+    const r=await rpc('get_logs',{lines:60},15000,true);   // silent: no command echo
+    const o=document.getElementById('out'); o.innerHTML='';
+    const h=document.createElement('div'); h.className='o-dim';
+    h.textContent='---- LIVE serial (auto-refresh 2.5s, newest at bottom) ----';
+    const body=document.createElement('div'); body.textContent=(r&&r.logs)?r.logs:'(no logs yet)';
+    o.appendChild(h); o.appendChild(body); o.scrollTop=o.scrollHeight;
+  }catch(e){ /* transient (busy/offline); next tick retries */ }
+}
+function toggleLive(){
+  const b=document.getElementById('bLive');
+  if(_liveTimer){ clearInterval(_liveTimer); _liveTimer=null; b.innerHTML='&#9654; Live'; b.className='btn2 sm'; out('live serial stopped','dim'); }
+  else { b.innerHTML='&#9208; Live'; b.className='btn-gn sm'; out('live serial on (refreshing every 2.5s)','dim'); liveTick(); _liveTimer=setInterval(liveTick,2500); }
+}
+
+/* ---------- features ---------- */
+async function listFiles(){
+  try{ const res=await rpc('list_files');
+    const fl=document.getElementById('files'); fl.innerHTML='';
+    (res.files||[]).forEach(f=>{ const d=document.createElement('div'); d.className='fitem'; d.textContent=f;
+      d.onclick=()=>openFile(f,d); fl.appendChild(d); });
+    out('  '+((res.files||[]).length)+' files','ok');
+  }catch(e){}
+}
+let _selEl=null;
+async function openFile(name,el){
+  try{ const res=await rpc('read_file',{path:name});
+    if(res.ok===false){ out('  '+res.err,'err'); return; }
+    document.getElementById('code').value=res.content||'';
+    document.getElementById('curFile').textContent=name;
+    S.curFile=name;
+    document.getElementById('bSave').disabled=false;
+    document.getElementById('bSaveReboot').disabled=false;
+    document.getElementById('bRun').disabled=false;
+    document.getElementById('bDel').disabled=false;
+    if(_selEl)_selEl.classList.remove('sel'); if(el){el.classList.add('sel'); _selEl=el;}
+    out('  opened '+name,'ok');
+  }catch(e){}
+}
+async function saveFile(thenReboot){
+  if(!S.curFile) return;
+  const content=document.getElementById('code').value;
+  try{ const res=await rpc('write_file',{path:S.curFile,content});
+    out('  '+(res.ok?('saved '+(res.bytes||content.length)+' bytes'):res.err),res.ok?'ok':'err');
+    if(thenReboot&&res.ok) await doReboot();
+  }catch(e){}
+}
+async function runFile(){ if(!S.curFile)return; try{ const r=await rpc('run',{path:S.curFile}); out('  '+(r.ok?'ran '+S.curFile:r.err),r.ok?'ok':'err'); }catch(e){} }
+
+const PROTECTED=['boot.py','tb_agent.py','wifi_net.py','wifi_portal.py','config.json'];
+async function newFile(){
+  let name=(prompt('New file name (e.g. sensors.py):')||'').trim();
+  if(!name) return;
+  try{
+    const r=await rpc('write_file',{path:name,content:''});
+    if(r.ok===false){ out('  '+r.err,'err'); return; }
+    out('  created '+name,'ok');
+    await listFiles();
+    document.getElementById('code').value='';
+    document.getElementById('curFile').textContent=name; S.curFile=name;
+    ['bSave','bSaveReboot','bRun','bDel'].forEach(id=>document.getElementById(id).disabled=false);
+    document.getElementById('code').focus();
+  }catch(e){}
+}
+async function deleteFile(){
+  if(!S.curFile) return;
+  if(PROTECTED.includes(S.curFile)){ out('  refusing to delete protected file: '+S.curFile,'err'); return; }
+  if(!confirm('Delete "'+S.curFile+'" from the device? This cannot be undone.')) return;
+  try{
+    const r=await rpc('delete_file',{path:S.curFile});
+    if(r.ok===false){ out('  '+r.err,'err'); return; }
+    out('  deleted '+S.curFile,'ok');
+    S.curFile=''; document.getElementById('code').value=''; document.getElementById('curFile').textContent='no file open';
+    ['bSave','bSaveReboot','bRun','bDel'].forEach(id=>document.getElementById(id).disabled=true);
+    await listFiles();
+  }catch(e){}
+}
+async function doReboot(){ try{ await rpc('reboot'); out('  reboot sent — device will reconnect','ok'); setTimeout(pollState,8000);}catch(e){} }
+
+/* ---------- free-text console (same grammar as the device web portal) ---------- */
+let _chist=[], _cidx=-1;
+async function runConsole(){
+  const el=document.getElementById('conIn'); const line=el.value.trim(); if(!line)return;
+  _chist.push(line); _cidx=-1; el.value='';
+  try{
+    const r=await rpc('console',{cmd:line});
+    out((r&&(r.help||r.logs||r.content))?(r.help||r.logs||r.content):JSON.stringify(r,null,1), r&&r.ok===false?'err':'');
+  }catch(e){}
+}
+document.addEventListener('keydown',e=>{
+  const el=document.getElementById('conIn'); if(document.activeElement!==el)return;
+  if(e.key==='Enter')runConsole();
+  if(e.key==='ArrowUp'&&_chist.length){_cidx=Math.max(0,_cidx<0?_chist.length-1:_cidx-1);el.value=_chist[_cidx];e.preventDefault()}
+  if(e.key==='ArrowDown'&&_cidx>=0){_cidx++;el.value=_chist[_cidx]||'';if(_cidx>=_chist.length)_cidx=-1;e.preventDefault()}
+});
+async function wifiInfo(){
+  try{
+    const r=await rpc('wifi_list');
+    out('---- Wi-Fi ----','dim');
+    out('  connected: '+(r.connected?('yes — '+(r.ssid||'')+'  portal: http://'+(r.ip||'?')+'  (or http://metalgw.local)'):'no'), r.connected?'ok':'err');
+    out('  saved networks: '+((r.saved||[]).join(', ')||'none'));
+    out('  add/remove:  wifi add <ssid> <pass>   |   wifi rm <ssid>','dim');
+  }catch(e){}
+}
+async function raiseAP(){
+  if(!confirm('Raise the MetalGW-xxxx hotspot on the device? (closes on next reboot unless you keep using it)'))return;
+  try{ const r=await rpc('portal_on'); out('  '+(r.msg||'AP raised')+' — join MetalGW-xxxx (pass = portal password) → http://192.168.4.1','ok'); }catch(e){}
+}
+async function getLogs(){ try{ const r=await rpc('get_logs',{lines:50}); out('---- device logs ----','dim'); out(r.logs||'(none)'); }catch(e){} }
+async function loadConfig(){ try{ const r=await rpc('get_config'); out('---- config.json ----','dim'); out(JSON.stringify(r.config||{},null,2));
+  out('To change: open config.json in the file list, edit, Save & Reboot.','dim'); }catch(e){} }
+
+/* ---------- online state via latest telemetry ---------- */
+async function pollState(){
+  try{ const r=await api('/api/plugins/telemetry/DEVICE/'+S.devId+'/values/timeseries?keys=status');
+    const ok=r.ok; let online=false;
+    if(ok){ const d=await r.json(); online=!!(d.status&&d.status.length); }
+    document.getElementById('hDot').className='dot '+(online?'on':'off');
+    document.getElementById('hState').textContent=online?'online':'no recent data';
+  }catch(e){}
+}
+setInterval(()=>{ if(S.devId)pollState(); },15000);
+
+function logout(){ location.reload(); }
+document.getElementById('gBtn').onclick=login;
+document.getElementById('gPass').addEventListener('keydown',e=>{ if(e.key==='Enter')login(); });
+setMode('token');
+</script>
+</body>
+</html>
