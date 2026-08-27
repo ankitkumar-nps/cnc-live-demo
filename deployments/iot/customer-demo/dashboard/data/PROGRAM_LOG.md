@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-08-28 02:16 IST_
+_Window: last 7 days · generated 2026-08-28 02:31 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,15 +7,15 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| SPFH_4_OD_ROUGH | 3 | 477 | 238 |
-| SPFD_6"ID2NDSIDE | 7 | 427 | 213 |
+| SPFH_4_OD_ROUGH | 3 | 474 | 237 |
+| SPFD_6"ID2NDSIDE | 7 | 429 | 214 |
 | SPFD_6_OD_ROUGH | 2 | 117 | 58 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-08-21 | SPFH_4_OD_ROUGH | 293 | 146 |
+| 2026-08-21 | SPFH_4_OD_ROUGH | 290 | 145 |
 | 2026-08-22 | SPFD_6"ID2NDSIDE | 48 | 24 |
 | 2026-08-22 | SPFH_4_OD_ROUGH | 183 | 91 |
 | 2026-08-23 | SPFD_6"ID2NDSIDE | 29 | 14 |
@@ -26,13 +26,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-08-26 | SPFD_6_OD_ROUGH | 61 | 30 |
 | 2026-08-27 | SPFD_6"ID2NDSIDE | 64 | 32 |
 | 2026-08-27 | SPFD_6_OD_ROUGH | 56 | 28 |
-| 2026-08-28 | SPFD_6"ID2NDSIDE | 13 | 6 |
+| 2026-08-28 | SPFD_6"ID2NDSIDE | 15 | 7 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 08-21 02:16 | 08-21 02:31 | SPFH_4_OD_ROUGH | 3 |
+| 08-21 02:31 | 08-21 02:31 | SPFH_4_OD_ROUGH | 0 |
 | 08-21 02:38 | 08-22 12:29 | SPFH_4_OD_ROUGH | 452 |
 | 08-22 12:37 | 08-22 14:59 | SPFH_4_OD_ROUGH | 21 |
 | 08-22 15:00 | 08-23 05:29 | SPFD_6"ID2NDSIDE | 77 |
@@ -53,4 +53,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 08-27 01:58 | 08-27 02:33 | SPFD_6_OD_ROUGH | 7 |
 | 08-27 02:40 | 08-27 09:24 | SPFD_6_OD_ROUGH | 31 |
 | 08-27 09:25 | 08-28 01:34 | SPFD_6"ID2NDSIDE | 74 |
-| 08-28 01:39 | 08-28 02:15 | SPFD_6"ID2NDSIDE | 3 |
+| 08-28 01:39 | 08-28 02:30 | SPFD_6"ID2NDSIDE | 5 |
