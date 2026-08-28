@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-08-29 00:31 IST_
+_Window: last 7 days · generated 2026-08-29 00:45 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,8 +7,8 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| SPFD_6"ID2NDSIDE | 8 | 529 | 264 |
-| SPFH_4_OD_ROUGH | 2 | 177 | 88 |
+| SPFD_6"ID2NDSIDE | 8 | 530 | 265 |
+| SPFH_4_OD_ROUGH | 2 | 173 | 86 |
 | SPFD_6_OD_ROUGH | 2 | 117 | 58 |
 
 ## By day × program
@@ -16,7 +16,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
 | 2026-08-22 | SPFD_6"ID2NDSIDE | 48 | 24 |
-| 2026-08-22 | SPFH_4_OD_ROUGH | 176 | 88 |
+| 2026-08-22 | SPFH_4_OD_ROUGH | 172 | 86 |
 | 2026-08-23 | SPFD_6"ID2NDSIDE | 29 | 14 |
 | 2026-08-24 | SPFD_6"ID2NDSIDE | 147 | 73 |
 | 2026-08-25 | SPFD_6"ID2NDSIDE | 84 | 42 |
@@ -26,13 +26,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-08-27 | SPFD_6"ID2NDSIDE | 64 | 32 |
 | 2026-08-27 | SPFD_6_OD_ROUGH | 56 | 28 |
 | 2026-08-28 | SPFD_6"ID2NDSIDE | 113 | 56 |
-| 2026-08-29 | SPFD_6"ID2NDSIDE | 2 | 1 |
+| 2026-08-29 | SPFD_6"ID2NDSIDE | 3 | 1 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 08-22 00:31 | 08-22 12:29 | SPFH_4_OD_ROUGH | 155 |
+| 08-22 00:46 | 08-22 12:29 | SPFH_4_OD_ROUGH | 151 |
 | 08-22 12:37 | 08-22 14:59 | SPFH_4_OD_ROUGH | 21 |
 | 08-22 15:00 | 08-23 05:29 | SPFD_6"ID2NDSIDE | 77 |
 | 08-24 06:07 | 08-24 06:13 | SPFD_6"ID2NDSIDE | 0 |
@@ -52,4 +52,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 08-27 01:58 | 08-27 02:33 | SPFD_6_OD_ROUGH | 7 |
 | 08-27 02:40 | 08-27 09:24 | SPFD_6_OD_ROUGH | 31 |
 | 08-27 09:25 | 08-28 01:34 | SPFD_6"ID2NDSIDE | 74 |
-| 08-28 01:39 | 08-29 00:30 | SPFD_6"ID2NDSIDE | 105 |
+| 08-28 01:39 | 08-29 00:45 | SPFD_6"ID2NDSIDE | 106 |
