@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-08-31 10:19 IST_
+_Window: last 7 days · generated 2026-08-31 10:47 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,8 +7,8 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| SPFD_6"ID2NDSIDE | 6 | 430 | 215 |
-| SPFH_3"_ID_4L | 3 | 239 | 119 |
+| SPFD_6"ID2NDSIDE | 6 | 425 | 212 |
+| SPFH_3"_ID_4L | 3 | 242 | 121 |
 | SPFD_6_OD_ROUGH | 2 | 117 | 58 |
 | SPFH_4_OD_ROUGH | 1 | 1 | 0 |
 
@@ -16,7 +16,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-08-24 | SPFD_6"ID2NDSIDE | 99 | 49 |
+| 2026-08-24 | SPFD_6"ID2NDSIDE | 94 | 47 |
 | 2026-08-25 | SPFD_6"ID2NDSIDE | 84 | 42 |
 | 2026-08-25 | SPFH_4_OD_ROUGH | 1 | 0 |
 | 2026-08-26 | SPFD_6"ID2NDSIDE | 42 | 21 |
@@ -27,13 +27,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-08-29 | SPFD_6"ID2NDSIDE | 28 | 14 |
 | 2026-08-29 | SPFH_3"_ID_4L | 137 | 68 |
 | 2026-08-30 | SPFH_3"_ID_4L | 58 | 29 |
-| 2026-08-31 | SPFH_3"_ID_4L | 44 | 22 |
+| 2026-08-31 | SPFH_3"_ID_4L | 47 | 23 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 08-24 10:19 | 08-24 20:44 | SPFD_6"ID2NDSIDE | 99 |
+| 08-24 10:46 | 08-24 20:44 | SPFD_6"ID2NDSIDE | 94 |
 | 08-25 06:46 | 08-25 06:46 | SPFD_6"ID2NDSIDE | 0 |
 | 08-25 06:47 | 08-25 06:47 | SPFH_6"ID1STSIDE | 0 |
 | 08-25 06:48 | 08-25 06:56 | SPFD_6"ID2NDSIDE | 0 |
@@ -56,4 +56,5 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 08-30 02:40 | 08-30 05:43 | SPFH_3"_ID_4L | 32 |
 | 08-31 06:10 | 08-31 09:32 | SPFH_3"_ID_4L | 41 |
 | 08-31 10:02 | 08-31 10:09 | SPFH_3"_ID_4L | 2 |
-| 08-31 10:11 | 08-31 10:16 | SPFH_3"_ID_4L | 1 |
+| 08-31 10:11 | 08-31 10:23 | SPFH_3"_ID_4L | 3 |
+| 08-31 10:45 | 08-31 10:45 | SPFH_3"_ID_4L | 1 |
