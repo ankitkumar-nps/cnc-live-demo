@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-02 19:00 IST_
+_Window: last 7 days · generated 2026-09-02 21:15 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,16 +7,16 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| SPFH_3"_ID_4L | 4 | 464 | 232 |
+| SPFH_3"_ID_4L | 4 | 484 | 242 |
 | SPFD_6"ID2NDSIDE | 3 | 205 | 102 |
-| SPFD_6_OD_ROUGH | 2 | 90 | 45 |
+| SPFD_6_OD_ROUGH | 2 | 78 | 39 |
 | NEEL_BLOCK | 1 | 19 | 9 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-08-26 | SPFD_6_OD_ROUGH | 34 | 17 |
+| 2026-08-26 | SPFD_6_OD_ROUGH | 22 | 11 |
 | 2026-08-27 | SPFD_6"ID2NDSIDE | 64 | 32 |
 | 2026-08-27 | SPFD_6_OD_ROUGH | 56 | 28 |
 | 2026-08-28 | SPFD_6"ID2NDSIDE | 113 | 56 |
@@ -25,13 +25,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-08-30 | SPFH_3"_ID_4L | 58 | 29 |
 | 2026-08-31 | SPFH_3"_ID_4L | 137 | 68 |
 | 2026-09-01 | NEEL_BLOCK | 19 | 9 |
-| 2026-09-02 | SPFH_3"_ID_4L | 132 | 66 |
+| 2026-09-02 | SPFH_3"_ID_4L | 152 | 76 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 08-26 19:01 | 08-27 01:50 | SPFD_6_OD_ROUGH | 52 |
+| 08-26 21:16 | 08-27 01:50 | SPFD_6_OD_ROUGH | 40 |
 | 08-27 01:58 | 08-27 02:33 | SPFD_6_OD_ROUGH | 7 |
 | 08-27 02:40 | 08-27 09:24 | SPFD_6_OD_ROUGH | 31 |
 | 08-27 09:25 | 08-28 01:34 | SPFD_6"ID2NDSIDE | 74 |
@@ -51,4 +51,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-01 13:27 | 09-01 13:53 | NEEL_BLOCK | 2 |
 | 09-01 13:57 | 09-01 18:56 | NEEL_BLOCK | 11 |
 | 09-01 19:03 | 09-01 19:09 | NEEL_BLOCK | 0 |
-| 09-02 07:50 | 09-02 18:59 | SPFH_3"_ID_4L | 132 |
+| 09-02 07:50 | 09-02 20:47 | SPFH_3"_ID_4L | 152 |
