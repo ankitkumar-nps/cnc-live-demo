@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-03 07:02 IST_
+_Window: last 7 days · generated 2026-09-03 07:18 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -28,7 +28,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 08-27 07:02 | 08-27 09:24 | SPFD_6_OD_ROUGH | 0 |
+| 08-27 07:18 | 08-27 09:24 | SPFD_6_OD_ROUGH | 0 |
 | 08-27 09:25 | 08-28 01:34 | SPFD_6"ID2NDSIDE | 74 |
 | 08-28 01:39 | 08-29 08:44 | SPFD_6"ID2NDSIDE | 131 |
 | 08-29 08:44 | 08-29 08:45 | SPF_3_ID_1ST | 0 |
@@ -47,3 +47,8 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-01 13:57 | 09-01 18:56 | NEEL_BLOCK | 11 |
 | 09-01 19:03 | 09-01 19:09 | NEEL_BLOCK | 0 |
 | 09-02 07:50 | 09-02 20:47 | SPFH_3"_ID_4L | 152 |
+| 09-03 07:11 | 09-03 07:12 | SPFH_3_OD_2ND | 0 |
+| 09-03 07:12 | 09-03 07:12 | SPFH_3"_1ST_OD | 0 |
+| 09-03 07:13 | 09-03 07:13 | SPFH_3_16_OD_2ND | 0 |
+| 09-03 07:13 | 09-03 07:13 | SPFH_3_OD_2ND | 0 |
+| 09-03 07:14 | 09-03 07:16 | SPFH_3"_1ST_OD | 0 |
