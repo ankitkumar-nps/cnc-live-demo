@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-03 14:16 IST_
+_Window: last 7 days · generated 2026-09-03 14:31 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -8,16 +8,16 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
 | SPFH_3"_ID_4L | 4 | 484 | 242 |
-| SPFD_6"ID2NDSIDE | 3 | 191 | 95 |
+| SPFD_6"ID2NDSIDE | 3 | 190 | 95 |
 | SPFH_3"_1ST_OD | 1 | 53 | 26 |
-| SPFD_6"_OD_ROUGH | 1 | 42 | 21 |
+| SPFD_6"_OD_ROUGH | 1 | 45 | 22 |
 | NEEL_BLOCK | 1 | 19 | 9 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-08-27 | SPFD_6"ID2NDSIDE | 50 | 25 |
+| 2026-08-27 | SPFD_6"ID2NDSIDE | 49 | 24 |
 | 2026-08-28 | SPFD_6"ID2NDSIDE | 113 | 56 |
 | 2026-08-29 | SPFD_6"ID2NDSIDE | 28 | 14 |
 | 2026-08-29 | SPFH_3"_ID_4L | 137 | 68 |
@@ -25,14 +25,14 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-08-31 | SPFH_3"_ID_4L | 137 | 68 |
 | 2026-09-01 | NEEL_BLOCK | 19 | 9 |
 | 2026-09-02 | SPFH_3"_ID_4L | 152 | 76 |
-| 2026-09-03 | SPFD_6"_OD_ROUGH | 42 | 21 |
+| 2026-09-03 | SPFD_6"_OD_ROUGH | 45 | 22 |
 | 2026-09-03 | SPFH_3"_1ST_OD | 53 | 26 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 08-27 14:16 | 08-28 01:34 | SPFD_6"ID2NDSIDE | 60 |
+| 08-27 14:31 | 08-28 01:34 | SPFD_6"ID2NDSIDE | 59 |
 | 08-28 01:39 | 08-29 08:44 | SPFD_6"ID2NDSIDE | 131 |
 | 08-29 08:44 | 08-29 08:45 | SPF_3_ID_1ST | 0 |
 | 08-29 08:46 | 08-29 21:54 | SPFH_3"_ID_4L | 114 |
@@ -62,4 +62,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-03 12:20 | 09-03 12:20 | SPFD_6_OD_ROUGH | 0 |
 | 09-03 12:21 | 09-03 12:25 | SPFD_6"_OD_ROUGH | 1 |
 | 09-03 12:25 | 09-03 12:25 | SPFD_8"ODROUGH | 0 |
-| 09-03 12:26 | 09-03 14:14 | SPFD_6"_OD_ROUGH | 41 |
+| 09-03 12:26 | 09-03 14:30 | SPFD_6"_OD_ROUGH | 44 |
