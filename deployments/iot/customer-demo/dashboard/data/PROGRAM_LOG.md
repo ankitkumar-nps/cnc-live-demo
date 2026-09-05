@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-05 10:15 IST_
+_Window: last 7 days · generated 2026-09-05 10:33 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,9 +7,9 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| SPFH_3"_ID_4L | 4 | 482 | 241 |
+| SPFH_3"_ID_4L | 4 | 481 | 240 |
 | SPFD_6"_OD_ROUGH | 2 | 223 | 111 |
-| SPFD_6"_ID_FINISH | 2 | 159 | 79 |
+| SPFD_6"_ID_FINISH | 2 | 161 | 80 |
 | SPFH_3"_1ST_OD | 1 | 53 | 26 |
 | NEEL_BLOCK | 1 | 19 | 9 |
 
@@ -17,7 +17,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-08-29 | SPFH_3"_ID_4L | 135 | 67 |
+| 2026-08-29 | SPFH_3"_ID_4L | 134 | 67 |
 | 2026-08-30 | SPFH_3"_ID_4L | 58 | 29 |
 | 2026-08-31 | SPFH_3"_ID_4L | 137 | 68 |
 | 2026-09-01 | NEEL_BLOCK | 19 | 9 |
@@ -26,13 +26,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-09-03 | SPFH_3"_1ST_OD | 53 | 26 |
 | 2026-09-04 | SPFD_6"_ID_FINISH | 105 | 52 |
 | 2026-09-04 | SPFD_6"_OD_ROUGH | 59 | 29 |
-| 2026-09-05 | SPFD_6"_ID_FINISH | 54 | 27 |
+| 2026-09-05 | SPFD_6"_ID_FINISH | 56 | 28 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 08-29 10:16 | 08-29 21:54 | SPFH_3"_ID_4L | 112 |
+| 08-29 10:33 | 08-29 21:54 | SPFH_3"_ID_4L | 111 |
 | 08-29 22:07 | 08-30 02:33 | SPFH_3"_ID_4L | 49 |
 | 08-30 02:40 | 08-30 05:43 | SPFH_3"_ID_4L | 32 |
 | 08-31 06:10 | 08-31 09:32 | SPFH_3"_ID_4L | 41 |
@@ -61,4 +61,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-03 12:25 | 09-03 12:25 | SPFD_8"ODROUGH | 0 |
 | 09-03 12:26 | 09-04 03:15 | SPFD_6"_OD_ROUGH | 222 |
 | 09-04 03:15 | 09-04 03:15 | SPFD_6"ID2NDSIDE | 0 |
-| 09-04 03:16 | 09-05 10:14 | SPFD_6"_ID_FINISH | 159 |
+| 09-04 03:16 | 09-05 10:32 | SPFD_6"_ID_FINISH | 161 |
