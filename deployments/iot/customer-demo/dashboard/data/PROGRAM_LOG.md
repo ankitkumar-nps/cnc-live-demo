@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-07 08:17 IST_
+_Window: last 7 days · generated 2026-09-07 08:31 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,18 +7,18 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| SPFH_3"_ID_4L | 2 | 266 | 133 |
+| SPFH_3"_ID_4L | 2 | 262 | 131 |
 | SPFD_6"_ID_FINISH | 2 | 225 | 112 |
 | SPFD_6"_OD_ROUGH | 2 | 223 | 111 |
 | SPFH_3"_1ST_OD | 1 | 53 | 26 |
-| SPFH_6_ID_FINISH | 3 | 43 | 21 |
+| SPFH_6_ID_FINISH | 3 | 45 | 22 |
 | NEEL_BLOCK | 1 | 19 | 9 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-08-31 | SPFH_3"_ID_4L | 114 | 57 |
+| 2026-08-31 | SPFH_3"_ID_4L | 110 | 55 |
 | 2026-09-01 | NEEL_BLOCK | 19 | 9 |
 | 2026-09-02 | SPFH_3"_ID_4L | 152 | 76 |
 | 2026-09-03 | SPFD_6"_OD_ROUGH | 164 | 82 |
@@ -28,13 +28,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-09-05 | SPFD_6"_ID_FINISH | 120 | 60 |
 | 2026-09-05 | SPFH_6_ID_FINISH | 9 | 4 |
 | 2026-09-06 | SPFH_6_ID_FINISH | 24 | 12 |
-| 2026-09-07 | SPFH_6_ID_FINISH | 10 | 5 |
+| 2026-09-07 | SPFH_6_ID_FINISH | 12 | 6 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 08-31 08:17 | 08-31 09:32 | SPFH_3"_ID_4L | 18 |
+| 08-31 08:32 | 08-31 09:32 | SPFH_3"_ID_4L | 14 |
 | 08-31 10:02 | 08-31 10:09 | SPFH_3"_ID_4L | 2 |
 | 08-31 10:11 | 08-31 10:23 | SPFH_3"_ID_4L | 3 |
 | 08-31 10:45 | 08-31 12:14 | SPFH_3"_ID_4L | 22 |
@@ -64,4 +64,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-05 15:03 | 09-05 21:39 | SPFD_6"_ID_FINISH | 37 |
 | 09-05 21:46 | 09-05 22:28 | SPFD_6"_ID_FINISH | 5 |
 | 09-05 22:28 | 09-06 05:09 | SPFH_6_ID_FINISH | 33 |
-| 09-07 05:52 | 09-07 08:15 | SPFH_6_ID_FINISH | 10 |
+| 09-07 05:52 | 09-07 08:31 | SPFH_6_ID_FINISH | 12 |
