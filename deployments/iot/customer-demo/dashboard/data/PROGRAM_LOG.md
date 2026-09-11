@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-11 13:32 IST_
+_Window: last 7 days · generated 2026-09-11 13:46 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -8,15 +8,15 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
 | SPFH_6_ID_FINISH | 4 | 194 | 97 |
-| SPFD_6"_ID_FINISH | 2 | 178 | 89 |
-| SPFH_3"_ID__2_SIDE | 2 | 154 | 77 |
+| SPFD_6"_ID_FINISH | 2 | 177 | 88 |
+| SPFH_3"_ID__2_SIDE | 2 | 158 | 79 |
 | SPFH_3"_1ST_OD | 1 | 47 | 23 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-09-04 | SPFD_6"_ID_FINISH | 58 | 29 |
+| 2026-09-04 | SPFD_6"_ID_FINISH | 57 | 28 |
 | 2026-09-05 | SPFD_6"_ID_FINISH | 120 | 60 |
 | 2026-09-05 | SPFH_6_ID_FINISH | 9 | 4 |
 | 2026-09-06 | SPFH_6_ID_FINISH | 24 | 12 |
@@ -24,13 +24,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-09-08 | SPFH_6_ID_FINISH | 79 | 39 |
 | 2026-09-10 | SPFH_3"_1ST_OD | 47 | 23 |
 | 2026-09-10 | SPFH_3"_ID__2_SIDE | 8 | 4 |
-| 2026-09-11 | SPFH_3"_ID__2_SIDE | 146 | 73 |
+| 2026-09-11 | SPFH_3"_ID__2_SIDE | 150 | 75 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 09-04 13:32 | 09-05 14:53 | SPFD_6"_ID_FINISH | 136 |
+| 09-04 13:46 | 09-05 14:53 | SPFD_6"_ID_FINISH | 135 |
 | 09-05 15:03 | 09-05 21:39 | SPFD_6"_ID_FINISH | 37 |
 | 09-05 21:46 | 09-05 22:28 | SPFD_6"_ID_FINISH | 5 |
 | 09-05 22:28 | 09-06 05:09 | SPFH_6_ID_FINISH | 33 |
@@ -41,4 +41,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-10 22:51 | 09-10 22:52 | PFH_3_ID | 0 |
 | 09-10 22:53 | 09-10 22:53 | SPFH_3"_ID__2_SIDE | 0 |
 | 09-10 22:53 | 09-10 22:53 | PFH_3_OD_2ND | 0 |
-| 09-10 22:54 | 09-11 13:30 | SPFH_3"_ID__2_SIDE | 154 |
+| 09-10 22:54 | 09-11 13:45 | SPFH_3"_ID__2_SIDE | 158 |
