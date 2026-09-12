@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-12 23:30 IST_
+_Window: last 7 days · generated 2026-09-12 23:45 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -8,24 +8,24 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
 | SPFH_3"_ID__2_SIDE | 3 | 356 | 178 |
-| SPFH_6_ID_FINISH | 4 | 188 | 94 |
+| SPFH_6_ID_FINISH | 4 | 186 | 93 |
 | SPFH_3"_1ST_OD | 1 | 47 | 23 |
 | SPFH_6_OD_ROUGH | 1 | 40 | 20 |
 | SPFD_6_OD_ROUGH | 1 | 39 | 19 |
-| NEEL_BLOCK | 1 | 8 | 4 |
+| NEEL_BLOCK | 1 | 9 | 4 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-09-05 | SPFH_6_ID_FINISH | 3 | 1 |
+| 2026-09-05 | SPFH_6_ID_FINISH | 1 | 0 |
 | 2026-09-06 | SPFH_6_ID_FINISH | 24 | 12 |
 | 2026-09-07 | SPFH_6_ID_FINISH | 82 | 41 |
 | 2026-09-08 | SPFH_6_ID_FINISH | 79 | 39 |
 | 2026-09-10 | SPFH_3"_1ST_OD | 47 | 23 |
 | 2026-09-10 | SPFH_3"_ID__2_SIDE | 8 | 4 |
 | 2026-09-11 | SPFH_3"_ID__2_SIDE | 271 | 135 |
-| 2026-09-12 | NEEL_BLOCK | 8 | 4 |
+| 2026-09-12 | NEEL_BLOCK | 9 | 4 |
 | 2026-09-12 | SPFD_6_OD_ROUGH | 39 | 19 |
 | 2026-09-12 | SPFH_3"_ID__2_SIDE | 77 | 38 |
 | 2026-09-12 | SPFH_6_OD_ROUGH | 40 | 20 |
@@ -34,7 +34,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 09-05 23:30 | 09-06 05:09 | SPFH_6_ID_FINISH | 27 |
+| 09-05 23:46 | 09-06 05:09 | SPFH_6_ID_FINISH | 25 |
 | 09-07 05:52 | 09-08 18:06 | SPFH_6_ID_FINISH | 161 |
 | 09-10 17:55 | 09-10 22:49 | SPFH_3"_1ST_OD | 47 |
 | 09-10 22:50 | 09-10 22:50 | PFH_3_ID | 0 |
@@ -46,4 +46,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-12 07:36 | 09-12 07:37 | SPFD_6"_OD_ROUGH | 0 |
 | 09-12 07:37 | 09-12 10:29 | SPFH_6_OD_ROUGH | 40 |
 | 09-12 10:29 | 09-12 14:17 | SPFD_6_OD_ROUGH | 39 |
-| 09-12 14:18 | 09-12 23:30 | NEEL_BLOCK | 8 |
+| 09-12 14:18 | 09-12 23:44 | NEEL_BLOCK | 9 |
