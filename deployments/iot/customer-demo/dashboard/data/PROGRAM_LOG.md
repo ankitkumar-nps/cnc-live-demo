@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-14 11:01 IST_
+_Window: last 7 days · generated 2026-09-14 11:17 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -8,8 +8,8 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
 | SPFH_3"_ID__2_SIDE | 3 | 356 | 178 |
-| SPFH_6_ID_FINISH | 2 | 140 | 70 |
-| SPFH_4_OD_ROUGH | 2 | 74 | 37 |
+| SPFH_6_ID_FINISH | 2 | 139 | 69 |
+| SPFH_4_OD_ROUGH | 2 | 79 | 39 |
 | SPFH_6"_OD_ROUGH | 1 | 63 | 31 |
 | SPFH_3"_1ST_OD | 1 | 47 | 23 |
 | SPFH_6_OD_ROUGH | 1 | 40 | 20 |
@@ -20,7 +20,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-09-07 | SPFH_6_ID_FINISH | 61 | 30 |
+| 2026-09-07 | SPFH_6_ID_FINISH | 60 | 30 |
 | 2026-09-08 | SPFH_6_ID_FINISH | 79 | 39 |
 | 2026-09-10 | SPFH_3"_1ST_OD | 47 | 23 |
 | 2026-09-10 | SPFH_3"_ID__2_SIDE | 8 | 4 |
@@ -31,13 +31,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-09-12 | SPFH_6_OD_ROUGH | 40 | 20 |
 | 2026-09-13 | SPFH_4_OD_ROUGH | 19 | 9 |
 | 2026-09-13 | SPFH_6"_OD_ROUGH | 63 | 31 |
-| 2026-09-14 | SPFH_4_OD_ROUGH | 55 | 27 |
+| 2026-09-14 | SPFH_4_OD_ROUGH | 60 | 30 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 09-07 11:01 | 09-08 18:06 | SPFH_6_ID_FINISH | 140 |
+| 09-07 11:18 | 09-08 18:06 | SPFH_6_ID_FINISH | 139 |
 | 09-10 17:55 | 09-10 22:49 | SPFH_3"_1ST_OD | 47 |
 | 09-10 22:50 | 09-10 22:50 | PFH_3_ID | 0 |
 | 09-10 22:50 | 09-10 22:51 | PFH_3_OD_2ND | 0 |
@@ -54,4 +54,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-13 03:59 | 09-13 07:34 | SPFH_4_OD_ROUGH | 19 |
 | 09-14 06:03 | 09-14 09:51 | SPFH_4_OD_ROUGH | 41 |
 | 09-14 10:05 | 09-14 10:27 | SPFH_4_OD_ROUGH | 6 |
-| 09-14 10:30 | 09-14 11:00 | SPFH_4_OD_ROUGH | 8 |
+| 09-14 10:30 | 09-14 11:17 | SPFH_4_OD_ROUGH | 13 |
