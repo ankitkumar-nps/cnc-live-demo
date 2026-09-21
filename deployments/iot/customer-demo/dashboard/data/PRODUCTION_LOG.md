@@ -60,6 +60,6 @@ The MIRROR (exact `$AC_TOTAL_PARTS`) is only active when the on-site `$A_DBD[8]=
 
 | Day | Date | A armed | B armed | C armed | Exact samples |
 |-----|------|:-------:|:-------:|:-------:|--------------:|
-| Mon | 2026-09-21 | ✅ | ✅ | · | 575 |
+| Mon | 2026-09-21 | ✅ | ✅ | · | 576 |
 | Sat | 2026-09-19 | ✅ | ✅ | ✅ | 2354 |
-| Fri | 2026-09-18 | · | ✅ | ✅ | 643 |
+| Fri | 2026-09-18 | · | ✅ | ✅ | 642 |
