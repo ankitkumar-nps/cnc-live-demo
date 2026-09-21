@@ -1,146 +1,150 @@
-// Patches the Overview tab's stat-tile grid without touching the built React bundle:
-//  1. Hides the "Current Run" tile (redundant with Cycle Time / the cutting ring).
-//  2. Relabels "Cycles This Job" -> "Parts This Shift", bound to whatever the existing
-//     "Shift-wise Production" widget already shows for the CURRENT shift — deliberately
-//     NOT a separate telemetry fetch (shift_parts), because that's the gateway's own
-//     live running tally and can differ by 1 from the history-recomputed number the
-//     Shift-wise widget uses (boundary-timing artifact, confirmed 2026-09-21). Scraping
-//     the already-displayed number guarantees the two never disagree, by construction.
-// Re-applies on every DOM change since this is a live-polling React app that
-// re-renders its own labels back on every refresh cycle.
+// cnc-overview-patch.js
+//
+// Patches the CNC dashboard's rendered output without touching the React source
+// (the real source was never pushed to GitHub — this is a stopgap until it is).
+// Design notes, because the first few iterations of this file had real bugs:
+//
+//  - POLLS on a fixed interval instead of reacting to MutationObserver events. The
+//    observer approach reacted to the DOM mid-transition (e.g. mid-route-change,
+//    while React is still swapping content), which could read/cache a transient,
+//    wrong value. Polling a SETTLED DOM every 1.5s avoids that whole class of bug.
+//  - The "Shift-wise Production" widget only exists on the Overview tab, but the
+//    "Cycles This Job" label this patches appears on every tab (shared component).
+//    So the scraped count is cached in module state and reused on tabs that can't
+//    scrape it themselves — and the cache is NEVER used to show a number we can't
+//    back up (if nothing's been scraped yet this session, the tile is left alone).
+//  - The cache only accepts a new value if it's >= the current one (shift counts are
+//    monotonic non-decreasing within a shift), except on a genuine shift change
+//    (A->B->C), which explicitly resets it. This guards the cache against exactly
+//    the "transient state during patching" problem above hitting a lower value.
+//  - The widget-heading match requires the text look like an actual heading (starts
+//    with the phrase, short) rather than "contains the phrase anywhere" — this
+//    dashboard's own injected subtitle text used to say "Shift-wise Production" too,
+//    which made the loose match find itself instead of the real widget. Structural
+//    fix, not a one-off wording change, so this class of bug can't recur.
 (function () {
-  // Persists across tab switches within this SPA session (a real page reload resets
-  // it, which is correct — we don't want a stale count surviving a reload). Only set
-  // when currentShiftCount() actually finds the Shift-wise Production widget (Overview
-  // tab only); every other tab shares this same "Cycles This Job" label but has no
-  // such widget to scrape, so without this cache they'd show a live-updating-looking
-  // tile that's actually frozen/stale. See admin-dashboards-cnc-monitor-missing memory
-  // for the 2026-09-21 incident this fixes: patch relabeled the tile on EVERY tab but
-  // could only get a correct number on Overview, silently showing a wrong number
-  // under a confident "synced" label everywhere else.
-  var lastKnownCount = null;
-  var lastKnownShiftLetter = null;
+  "use strict";
 
-  function findLabelSpan(root, sub) {
-    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    var node;
-    while ((node = walker.nextNode())) {
-      if (node.textContent.trim().toLowerCase() === sub) return node.parentElement;
-    }
-    return null;
-  }
+  var POLL_MS = 1500;
+  var state = { count: null, shiftLetter: null };
 
-  function currentShiftLetter() {
-    // Shifts are defined in IST regardless of viewer's own timezone: A 06-14, B 14-22, C 22-06.
-    var istHour = new Date(Date.now() + 5.5 * 3600000).getUTCHours();
-    if (istHour >= 6 && istHour < 14) return "A";
-    if (istHour >= 14 && istHour < 22) return "B";
+  function shiftLetterNowIST() {
+    // Shifts are IST-fixed regardless of the viewer's own timezone: A 06-14, B 14-22, C 22-06.
+    var h = new Date(Date.now() + 5.5 * 3600000).getUTCHours();
+    if (h >= 6 && h < 14) return "A";
+    if (h >= 14 && h < 22) return "B";
     return "C";
   }
 
-  function currentShiftCount(main) {
-    var walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
-    var n, texts = [], capture = false;
-    while ((n = walker.nextNode())) {
-      var t = n.textContent.trim();
-      if (/shift-wise production/i.test(t)) capture = true;
-      if (capture) {
-        texts.push(t);
-        if (texts.length > 30) break;
+  function textNodes(root) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    var out = [], n;
+    while ((n = walker.nextNode())) out.push(n);
+    return out;
+  }
+
+  function findByExactText(root, text) {
+    var nodes = textNodes(root);
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].textContent.trim().toLowerCase() === text) return nodes[i];
+    }
+    return null;
+  }
+
+  // Reads the CURRENT shift's row from the "Shift-wise Production" widget. Returns
+  // null when that widget isn't present (any tab but Overview) or hasn't loaded yet.
+  function readShiftWiseCount(main) {
+    var nodes = textNodes(main);
+    var startIdx = -1;
+    for (var i = 0; i < nodes.length; i++) {
+      var t = nodes[i].textContent.trim();
+      // Anchored + length-capped so no injected text elsewhere on the page (which
+      // might legitimately mention "shift-wise production" in a sentence) can ever
+      // be mistaken for the widget's own heading.
+      if (t.length < 40 && /^shift-wise production\b/i.test(t)) {
+        startIdx = i;
+        break;
       }
     }
-    var letter = currentShiftLetter();
-    for (var i = 1; i < texts.length; i++) {
-      if (texts[i] === letter && texts[i - 1] === "Shift") {
-        for (var j = i + 1; j < texts.length; j++) {
-          if (/^\d+$/.test(texts[j])) return texts[j];
+    if (startIdx === -1) return null;
+    var letter = shiftLetterNowIST();
+    var end = Math.min(startIdx + 30, nodes.length);
+    for (var j = startIdx + 1; j < end; j++) {
+      var cur = nodes[j].textContent.trim();
+      var prev = nodes[j - 1].textContent.trim();
+      if (cur === letter && prev === "Shift") {
+        for (var k = j + 1; k < end; k++) {
+          var v = nodes[k].textContent.trim();
+          if (/^\d+$/.test(v)) return v;
         }
       }
     }
     return null;
   }
 
-  function apply() {
-    try {
-      var main = document.querySelector("main");
-      if (!main) return;
-
-      var curRunLabel = findLabelSpan(main, "current run");
-      if (curRunLabel && curRunLabel.parentElement) {
-        curRunLabel.parentElement.style.display = "none";
-      }
-
-      // Shift counts only ever increase within a shift (same monotonic rule the
-      // backend CSV pipeline uses) — reject any scraped value LOWER than what's
-      // already cached. Guards against a transient bad read during a tab-switch DOM
-      // transition permanently corrupting the cache (observed 2026-09-21: a scrape
-      // mid-transition briefly returned a stale/wrong number and nothing ever
-      // re-corrected it since no further mutation fired to re-trigger apply()).
-      var nowLetter = currentShiftLetter();
-      if (nowLetter !== lastKnownShiftLetter) {
-        // Real shift change (A->B->C) — the monotonic guard below must not block this
-        // legitimate reset to a lower/zero count for the new shift.
-        lastKnownCount = null;
-        lastKnownShiftLetter = nowLetter;
-      }
-      var scraped = currentShiftCount(main);
-      if (scraped != null && (lastKnownCount == null || Number(scraped) >= Number(lastKnownCount))) {
-        lastKnownCount = scraped;
-      }
-      var count = lastKnownCount;
-
-      // Only touch this tile at all if we have a trustworthy number (scraped now, or
-      // cached from an earlier visit to Overview this session). Otherwise leave it
-      // completely as-is — original label, original value — rather than showing a
-      // confident "Parts This Shift" label over a number we can't actually vouch for.
-      var cyclesLabel = findLabelSpan(main, "cycles this job") || findLabelSpan(main, "parts this shift");
-      if (cyclesLabel && count != null) {
-        cyclesLabel.textContent = "PARTS THIS SHIFT";
-        var tile = cyclesLabel.parentElement;
-        var valueRow = tile.querySelector(":scope > div");
-        if (valueRow) {
-          var spans = valueRow.querySelectorAll("span");
-          if (spans[0]) spans[0].textContent = count;
-          if (spans[1]) spans[1].textContent = "parts";
-        }
-        var subtitle = tile.querySelectorAll(":scope > span")[1];
-        if (subtitle) subtitle.textContent = "Synced with the shift totals below · current shift only";
-      }
-
-      // Sidebar mini-badge (under the status pill) — same label text, separate DOM
-      // subtree (bare number + label sharing one parent <span>), needs its own pass.
-      var aside = document.querySelector("aside");
-      if (aside && count != null) {
-        var w = document.createTreeWalker(aside, NodeFilter.SHOW_TEXT);
-        var m, sideLabelNode = null, sideDigitNode = null;
-        while ((m = w.nextNode())) {
-          var t2 = m.textContent.trim().toLowerCase();
-          if (t2 === "cycles this job" || t2 === "parts this shift") sideLabelNode = m;
-        }
-        if (sideLabelNode) {
-          var w2 = document.createTreeWalker(aside, NodeFilter.SHOW_TEXT);
-          while ((m = w2.nextNode())) {
-            if (/^\d+$/.test(m.textContent.trim()) && m.parentElement === sideLabelNode.parentElement) {
-              sideDigitNode = m;
-            }
-          }
-          sideLabelNode.textContent = " parts this shift";
-          if (sideDigitNode && count != null) sideDigitNode.textContent = count;
-        }
-      }
-    } catch (e) {
-      console.warn("cnc-overview-patch: apply failed", e);
+  function updateCache(main) {
+    var letter = shiftLetterNowIST();
+    if (letter !== state.shiftLetter) {
+      state.shiftLetter = letter;
+      state.count = null; // legitimate reset — a new shift really does start lower
+    }
+    var scraped = readShiftWiseCount(main);
+    if (scraped != null && (state.count == null || Number(scraped) >= Number(state.count))) {
+      state.count = scraped;
     }
   }
 
-  var root = document.getElementById("root");
-  if (root) {
-    var debounce = null;
-    new MutationObserver(function () {
-      clearTimeout(debounce);
-      debounce = setTimeout(apply, 150);
-    }).observe(root, { childList: true, subtree: true, characterData: true });
+  function hideCurrentRun(main) {
+    var node = findByExactText(main, "current run");
+    if (node && node.parentElement) node.parentElement.style.display = "none";
   }
 
-  setTimeout(apply, 500);
+  function patchMainTile(main) {
+    if (state.count == null) return; // never show a label backed by no real number
+    var node = findByExactText(main, "cycles this job") || findByExactText(main, "parts this shift");
+    if (!node) return;
+    node.textContent = "PARTS THIS SHIFT";
+    var tile = node.parentElement;
+    var valueRow = tile.querySelector(":scope > div");
+    if (valueRow) {
+      var spans = valueRow.querySelectorAll("span");
+      if (spans[0]) spans[0].textContent = state.count;
+      if (spans[1]) spans[1].textContent = "parts";
+    }
+    var subtitle = tile.querySelectorAll(":scope > span")[1];
+    if (subtitle) subtitle.textContent = "Synced with the shift totals below · current shift only";
+  }
+
+  function patchSidebarBadge() {
+    if (state.count == null) return;
+    var aside = document.querySelector("aside");
+    if (!aside) return;
+    var labelNode = findByExactText(aside, "cycles this job") || findByExactText(aside, "parts this shift");
+    if (!labelNode) return;
+    var digitNode = null;
+    var nodes = textNodes(aside);
+    for (var i = 0; i < nodes.length; i++) {
+      if (/^\d+$/.test(nodes[i].textContent.trim()) && nodes[i].parentElement === labelNode.parentElement) {
+        digitNode = nodes[i];
+      }
+    }
+    labelNode.textContent = " parts this shift";
+    if (digitNode) digitNode.textContent = state.count;
+  }
+
+  function tick() {
+    try {
+      var main = document.querySelector("main");
+      if (!main) return;
+      hideCurrentRun(main);
+      updateCache(main);
+      patchMainTile(main);
+      patchSidebarBadge();
+    } catch (e) {
+      console.warn("cnc-overview-patch:", e);
+    }
+  }
+
+  setInterval(tick, POLL_MS);
+  tick();
 })();
