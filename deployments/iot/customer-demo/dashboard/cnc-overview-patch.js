@@ -41,6 +41,29 @@
         var subtitle = tile.querySelectorAll(":scope > span")[1];
         if (subtitle) subtitle.textContent = "Gateway shift counter · current shift only";
       }
+
+      // Sidebar mini-badge (under the status pill) shows the same "cycles this job"
+      // text as a bare number + label sharing one <span> — separate DOM subtree from
+      // the main tile above, so it needs its own pass.
+      var aside = document.querySelector("aside");
+      if (aside) {
+        var w = document.createTreeWalker(aside, NodeFilter.SHOW_TEXT);
+        var n, sideLabelNode = null, sideDigitNode = null;
+        while ((n = w.nextNode())) {
+          var t = n.textContent.trim().toLowerCase();
+          if (t === "cycles this job" || t === "parts this shift") sideLabelNode = n;
+        }
+        if (sideLabelNode) {
+          var w2 = document.createTreeWalker(aside, NodeFilter.SHOW_TEXT);
+          while ((n = w2.nextNode())) {
+            if (/^\d+$/.test(n.textContent.trim()) && n.parentElement === sideLabelNode.parentElement) {
+              sideDigitNode = n;
+            }
+          }
+          sideLabelNode.textContent = " parts this shift";
+          if (sideDigitNode && shiftParts != null) sideDigitNode.textContent = shiftParts;
+        }
+      }
     } catch (e) {
       console.warn("cnc-overview-patch: apply failed", e);
     }
