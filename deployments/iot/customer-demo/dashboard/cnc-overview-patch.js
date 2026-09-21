@@ -2,38 +2,122 @@
 //
 // Patches the CNC dashboard's rendered output without touching the React source
 // (the real source was never pushed to GitHub — this is a stopgap until it is).
-// Design notes, because the first few iterations of this file had real bugs:
 //
-//  - POLLS on a fixed interval instead of reacting to MutationObserver events. The
-//    observer approach reacted to the DOM mid-transition (e.g. mid-route-change,
-//    while React is still swapping content), which could read/cache a transient,
-//    wrong value. Polling a SETTLED DOM every 1.5s avoids that whole class of bug.
-//  - The "Shift-wise Production" widget only exists on the Overview tab, but the
-//    "Cycles This Job" label this patches appears on every tab (shared component).
-//    So the scraped count is cached in module state and reused on tabs that can't
-//    scrape it themselves — and the cache is NEVER used to show a number we can't
-//    back up (if nothing's been scraped yet this session, the tile is left alone).
-//  - The cache only accepts a new value if it's >= the current one (shift counts are
-//    monotonic non-decreasing within a shift), except on a genuine shift change
-//    (A->B->C), which explicitly resets it. This guards the cache against exactly
-//    the "transient state during patching" problem above hitting a lower value.
-//  - The widget-heading match requires the text look like an actual heading (starts
-//    with the phrase, short) rather than "contains the phrase anywhere" — this
-//    dashboard's own injected subtitle text used to say "Shift-wise Production" too,
-//    which made the loose match find itself instead of the real widget. Structural
-//    fix, not a one-off wording change, so this class of bug can't recur.
+// Design history, kept because each version fixed a real bug the previous one had:
+//  v1: fetched `shift_parts` telemetry directly -> could differ from the page's own
+//      Shift-wise widget by 1+ (two different computations of "shift total" existed
+//      in this codebase; using a THIRD one made it worse, not better).
+//  v2: scraped the number out of the page's own "Shift-wise Production" widget
+//      instead -> correct on Overview, but that widget only renders on Overview, so
+//      every other tab either showed nothing or (worse, in an earlier revision)
+//      showed a stale/wrong cached number depending on which tab was visited first.
+//  v3 (this version): computes the current shift's total DIRECTLY from ThingsBoard,
+//      independently, on every tab, every poll — no dependency on another widget
+//      having rendered, no dependency on visit order. This is the actual fix: the
+//      patch no longer needs anything from the page except where to write the answer.
 (function () {
   "use strict";
 
-  var POLL_MS = 1500;
-  var state = { count: null, shiftLetter: null };
+  var TB_BASE = "https://iot.iotnp.com";
+  var PUBLIC_ID = "77772310-b1b8-11ef-b8f7-152cc84f141f";
+  var DEVICE_ID = "1fe68930-8a68-11f1-ad77-1bcdb7c23082";
+  var MAXSTEP = 5; // same discontinuity-safe rule the backend CSV pipeline uses
+  var POLL_MS = 1500; // how often the DOM is patched
+  var FETCH_MS = 30000; // how often the shift total is recomputed from ThingsBoard
 
-  function shiftLetterNowIST() {
-    // Shifts are IST-fixed regardless of the viewer's own timezone: A 06-14, B 14-22, C 22-06.
-    var h = new Date(Date.now() + 5.5 * 3600000).getUTCHours();
-    if (h >= 6 && h < 14) return "A";
-    if (h >= 14 && h < 22) return "B";
-    return "C";
+  var count = null; // last computed value; never show a label we can't back up
+  var source = null; // "live" (ThingsBoard, this poll) or "csv" (fallback, hourly)
+  var tbToken = null;
+
+  function istNow() {
+    // A Date whose UTC getters read out the IST wall-clock, avoiding any dependence
+    // on the viewer's own timezone.
+    return new Date(Date.now() + 5.5 * 3600000);
+  }
+
+  // Start-of-current-shift as a REAL epoch ms timestamp (A 06:00, B 14:00, C 22:00 IST).
+  function currentShiftStartMs() {
+    var ist = istNow();
+    var h = ist.getUTCHours();
+    var startHour = h >= 6 && h < 14 ? 6 : h >= 14 && h < 22 ? 14 : 22;
+    var dayStartIST = Date.UTC(ist.getUTCFullYear(), ist.getUTCMonth(), ist.getUTCDate(), 0, 0, 0);
+    var shiftStartIST = dayStartIST + startHour * 3600000;
+    if (h < 6) shiftStartIST -= 24 * 3600000; // C shift that started yesterday evening
+    return shiftStartIST - 5.5 * 3600000; // back to a real UTC epoch ms
+  }
+
+  function tbLogin() {
+    return fetch(TB_BASE + "/api/auth/login/public", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ publicId: PUBLIC_ID }),
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (auth) { tbToken = auth.token; return tbToken; });
+  }
+
+  // FALLBACK: the committed PRODUCTION_LEDGER.csv (same one the Production Log tab
+  // reads, pushed hourly by the Pi's self-healing log_commit.sh). Used ONLY when the
+  // live ThingsBoard fetch fails — e.g. the public device's history endpoint is down
+  // or slow. Same-origin relative fetch, no auth needed.
+  function fetchShiftCountFromCsv() {
+    var ist = istNow();
+    var dateStr = ist.getUTCFullYear() + "-" +
+      String(ist.getUTCMonth() + 1).padStart(2, "0") + "-" +
+      String(ist.getUTCDate()).padStart(2, "0");
+    var h = ist.getUTCHours();
+    var letter = h >= 6 && h < 14 ? "A" : h >= 14 && h < 22 ? "B" : "C";
+    return fetch("data/PRODUCTION_LEDGER.csv")
+      .then(function (r) { return r.text(); })
+      .then(function (text) {
+        var lines = text.split("\n");
+        for (var i = 1; i < lines.length; i++) {
+          var cols = lines[i].split(",");
+          if (cols[0] === dateStr && cols[1] === letter) return Number(cols[2]);
+        }
+        return null;
+      });
+  }
+
+  function fetchShiftCount() {
+    var shiftStart = currentShiftStartMs();
+    var startTs = shiftStart - 3600000; // 1h lookback buffer for a baseline point
+    var endTs = Date.now();
+    var url = TB_BASE + "/api/plugins/telemetry/DEVICE/" + DEVICE_ID +
+      "/values/timeseries?keys=parts_total&startTs=" + startTs + "&endTs=" + endTs +
+      "&orderBy=ASC&agg=NONE&limit=5000";
+    return (tbToken ? Promise.resolve(tbToken) : tbLogin())
+      .then(function (token) {
+        return fetch(url, { headers: { "X-Authorization": "Bearer " + token } });
+      })
+      .then(function (r) {
+        if (r.status === 401) { tbToken = null; throw new Error("token expired"); }
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        var pts = (data.parts_total || []).slice().sort(function (a, b) { return a.ts - b.ts; });
+        var total = 0, prev = null;
+        for (var i = 0; i < pts.length; i++) {
+          var ts = Number(pts[i].ts), v = Number(pts[i].value);
+          if (prev != null) {
+            var inc = v - prev;
+            if (inc > 0 && inc <= MAXSTEP && ts >= shiftStart) total += inc;
+          }
+          prev = v;
+        }
+        count = total;
+        source = "live";
+      })
+      .catch(function (e) {
+        console.warn("cnc-overview-patch: live shift fetch failed, falling back to CSV", e);
+        return fetchShiftCountFromCsv()
+          .then(function (csvCount) {
+            if (csvCount != null) { count = csvCount; source = "csv"; }
+            // else: leave `count` as whatever it last was — stale-but-recent beats blank.
+          })
+          .catch(function (e2) { console.warn("cnc-overview-patch: CSV fallback also failed", e2); });
+      });
   }
 
   function textNodes(root) {
@@ -51,56 +135,13 @@
     return null;
   }
 
-  // Reads the CURRENT shift's row from the "Shift-wise Production" widget. Returns
-  // null when that widget isn't present (any tab but Overview) or hasn't loaded yet.
-  function readShiftWiseCount(main) {
-    var nodes = textNodes(main);
-    var startIdx = -1;
-    for (var i = 0; i < nodes.length; i++) {
-      var t = nodes[i].textContent.trim();
-      // Anchored + length-capped so no injected text elsewhere on the page (which
-      // might legitimately mention "shift-wise production" in a sentence) can ever
-      // be mistaken for the widget's own heading.
-      if (t.length < 40 && /^shift-wise production\b/i.test(t)) {
-        startIdx = i;
-        break;
-      }
-    }
-    if (startIdx === -1) return null;
-    var letter = shiftLetterNowIST();
-    var end = Math.min(startIdx + 30, nodes.length);
-    for (var j = startIdx + 1; j < end; j++) {
-      var cur = nodes[j].textContent.trim();
-      var prev = nodes[j - 1].textContent.trim();
-      if (cur === letter && prev === "Shift") {
-        for (var k = j + 1; k < end; k++) {
-          var v = nodes[k].textContent.trim();
-          if (/^\d+$/.test(v)) return v;
-        }
-      }
-    }
-    return null;
-  }
-
-  function updateCache(main) {
-    var letter = shiftLetterNowIST();
-    if (letter !== state.shiftLetter) {
-      state.shiftLetter = letter;
-      state.count = null; // legitimate reset — a new shift really does start lower
-    }
-    var scraped = readShiftWiseCount(main);
-    if (scraped != null && (state.count == null || Number(scraped) >= Number(state.count))) {
-      state.count = scraped;
-    }
-  }
-
   function hideCurrentRun(main) {
     var node = findByExactText(main, "current run");
     if (node && node.parentElement) node.parentElement.style.display = "none";
   }
 
   function patchMainTile(main) {
-    if (state.count == null) return; // never show a label backed by no real number
+    if (count == null) return;
     var node = findByExactText(main, "cycles this job") || findByExactText(main, "parts this shift");
     if (!node) return;
     node.textContent = "PARTS THIS SHIFT";
@@ -108,15 +149,19 @@
     var valueRow = tile.querySelector(":scope > div");
     if (valueRow) {
       var spans = valueRow.querySelectorAll("span");
-      if (spans[0]) spans[0].textContent = state.count;
+      if (spans[0]) spans[0].textContent = count;
       if (spans[1]) spans[1].textContent = "parts";
     }
     var subtitle = tile.querySelectorAll(":scope > span")[1];
-    if (subtitle) subtitle.textContent = "Synced with the shift totals below · current shift only";
+    if (subtitle) {
+      subtitle.textContent = source === "csv"
+        ? "From committed log (fallback) · current shift only"
+        : "Live from ThingsBoard · current shift only";
+    }
   }
 
   function patchSidebarBadge() {
-    if (state.count == null) return;
+    if (count == null) return;
     var aside = document.querySelector("aside");
     if (!aside) return;
     var labelNode = findByExactText(aside, "cycles this job") || findByExactText(aside, "parts this shift");
@@ -129,15 +174,14 @@
       }
     }
     labelNode.textContent = " parts this shift";
-    if (digitNode) digitNode.textContent = state.count;
+    if (digitNode) digitNode.textContent = count;
   }
 
-  function tick() {
+  function paint() {
     try {
       var main = document.querySelector("main");
       if (!main) return;
       hideCurrentRun(main);
-      updateCache(main);
       patchMainTile(main);
       patchSidebarBadge();
     } catch (e) {
@@ -145,6 +189,7 @@
     }
   }
 
-  setInterval(tick, POLL_MS);
-  tick();
+  fetchShiftCount().then(paint);
+  setInterval(function () { fetchShiftCount().then(paint); }, FETCH_MS);
+  setInterval(paint, POLL_MS); // repaint often so a tab switch picks up the number immediately
 })();
