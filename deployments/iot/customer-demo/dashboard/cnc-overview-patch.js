@@ -71,7 +71,7 @@
           if (spans[1]) spans[1].textContent = "parts";
         }
         var subtitle = tile.querySelectorAll(":scope > span")[1];
-        if (subtitle) subtitle.textContent = "Matches Shift-wise Production below · current shift only";
+        if (subtitle) subtitle.textContent = "Synced with the shift totals below · current shift only";
       }
 
       // Sidebar mini-badge (under the status pill) — same label text, separate DOM
