@@ -143,24 +143,48 @@
     if (node && node.parentElement) node.parentElement.style.display = "none";
   }
 
+  // Deliberately NOT assuming a specific DOM nesting (e.g. "the value lives in a
+  // direct-child div") — that assumption broke silently in some render states
+  // (idle/no-recent-part) where the tile's internal structure differs, leaving the
+  // label renamed but the number/unit/subtitle untouched. Instead: walk up from the
+  // label until we reach an ancestor that actually contains a numeric value (levels
+  // of nesting vary by render state), then act on whichever text nodes look like the
+  // thing we're replacing — skipping the "FROM MACHINE" badge by name, since it's
+  // also a longish all-caps string that would otherwise be mistaken for the subtitle.
+  function findTileRoot(labelNode) {
+    var el = labelNode.parentElement;
+    for (var lvl = 0; lvl < 4 && el; lvl++) {
+      var hasNum = textNodes(el).some(function (n) { return /^\d+$/.test(n.textContent.trim()); });
+      if (hasNum) return el;
+      el = el.parentElement;
+    }
+    return labelNode.parentElement; // fallback: at least don't crash
+  }
+
   function patchMainTile(main) {
     if (count == null) return;
     var node = findByExactText(main, "cycles this job") || findByExactText(main, "parts this shift");
     if (!node) return;
     node.textContent = "PARTS THIS SHIFT";
-    var tile = node.parentElement;
-    var valueRow = tile.querySelector(":scope > div");
-    if (valueRow) {
-      var spans = valueRow.querySelectorAll("span");
-      if (spans[0]) spans[0].textContent = count;
-      if (spans[1]) spans[1].textContent = "parts";
+    var tile = findTileRoot(node);
+    var nodes = textNodes(tile);
+    var numNode = null, unitNode = null, subtitleNode = null, subtitleTailNode = null;
+    for (var i = 0; i < nodes.length; i++) {
+      var t = nodes[i].textContent.trim();
+      if (nodes[i] === node || /^from machine$/i.test(t)) continue;
+      if (numNode == null && /^\d+$/.test(t)) { numNode = nodes[i]; continue; }
+      if (numNode != null && unitNode == null && /^(cycles|parts)$/i.test(t)) { unitNode = nodes[i]; continue; }
+      if (unitNode != null && subtitleNode == null && t.length > 8) { subtitleNode = nodes[i]; continue; }
+      if (subtitleNode != null && subtitleTailNode == null && /^\d+$/.test(t)) { subtitleTailNode = nodes[i]; continue; }
     }
-    var subtitle = tile.querySelectorAll(":scope > span")[1];
-    if (subtitle) {
-      subtitle.textContent = source === "csv"
+    if (numNode) numNode.textContent = count;
+    if (unitNode) unitNode.textContent = "parts";
+    if (subtitleNode) {
+      subtitleNode.textContent = source === "csv"
         ? "From committed log (fallback) · current shift only"
         : "Live from ThingsBoard · current shift only";
     }
+    if (subtitleTailNode) subtitleTailNode.textContent = ""; // e.g. the old "machine total <N>" trailing number
   }
 
   function patchSidebarBadge() {
