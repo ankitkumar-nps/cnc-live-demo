@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-21 19:17 IST_
+_Window: last 7 days · generated 2026-09-21 19:30 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,7 +7,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| SPFH_8"16"IDFINISH | 5 | 166 | 83 |
+| SPFH_8"16"IDFINISH | 5 | 167 | 83 |
 | SPFH_10_OD_ROUGH | 3 | 138 | 69 |
 | PF_PFH_4_CONVERT | 1 | 45 | 22 |
 | SPFBL_10"1STSIDE | 1 | 12 | 6 |
@@ -27,7 +27,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-09-19 | SPFBL_10"1STSIDE | 12 | 6 |
 | 2026-09-19 | SPFH_8"16"IDFINISH | 47 | 23 |
 | 2026-09-20 | SPFH_8"16"IDFINISH | 22 | 11 |
-| 2026-09-21 | SPFH_8"16"IDFINISH | 22 | 11 |
+| 2026-09-21 | SPFH_8"16"IDFINISH | 23 | 11 |
 
 ## Program run timeline
 
@@ -69,4 +69,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-21 12:12 | 09-21 12:46 | SPFH_8"16"IDFINISH | 2 |
 | 09-21 13:48 | 09-21 13:54 | SPFH_8"16"IDFINISH | 0 |
 | 09-21 14:15 | 09-21 18:14 | SPFH_8"16"IDFINISH | 16 |
-| 09-21 18:30 | 09-21 19:17 | SPFH_8"16"IDFINISH | 4 |
+| 09-21 18:30 | 09-21 19:30 | SPFH_8"16"IDFINISH | 5 |
