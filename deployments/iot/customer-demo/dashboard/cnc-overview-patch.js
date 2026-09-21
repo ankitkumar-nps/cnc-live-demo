@@ -106,17 +106,20 @@
           }
           prev = v;
         }
+        console.log("[cnc-patch] live OK: shiftStart=" + new Date(shiftStart).toISOString() +
+          " points=" + pts.length + " computed=" + total + " (prev count=" + count + ")");
         count = total;
         source = "live";
       })
       .catch(function (e) {
-        console.warn("cnc-overview-patch: live shift fetch failed, falling back to CSV", e);
+        console.warn("[cnc-patch] live fetch failed, falling back to CSV:", e && e.message);
         return fetchShiftCountFromCsv()
           .then(function (csvCount) {
+            console.log("[cnc-patch] csv fallback result: " + csvCount + " (prev count=" + count + ")");
             if (csvCount != null) { count = csvCount; source = "csv"; }
             // else: leave `count` as whatever it last was — stale-but-recent beats blank.
           })
-          .catch(function (e2) { console.warn("cnc-overview-patch: CSV fallback also failed", e2); });
+          .catch(function (e2) { console.warn("[cnc-patch] CSV fallback also failed:", e2 && e2.message); });
       });
   }
 
