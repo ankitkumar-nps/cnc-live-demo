@@ -9,6 +9,17 @@
 // Re-applies on every DOM change since this is a live-polling React app that
 // re-renders its own labels back on every refresh cycle.
 (function () {
+  // Persists across tab switches within this SPA session (a real page reload resets
+  // it, which is correct — we don't want a stale count surviving a reload). Only set
+  // when currentShiftCount() actually finds the Shift-wise Production widget (Overview
+  // tab only); every other tab shares this same "Cycles This Job" label but has no
+  // such widget to scrape, so without this cache they'd show a live-updating-looking
+  // tile that's actually frozen/stale. See admin-dashboards-cnc-monitor-missing memory
+  // for the 2026-09-21 incident this fixes: patch relabeled the tile on EVERY tab but
+  // could only get a correct number on Overview, silently showing a wrong number
+  // under a confident "synced" label everywhere else.
+  var lastKnownCount = null;
+
   function findLabelSpan(root, sub) {
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     var node;
@@ -58,16 +69,22 @@
         curRunLabel.parentElement.style.display = "none";
       }
 
-      var count = currentShiftCount(main);
+      var scraped = currentShiftCount(main);
+      if (scraped != null) lastKnownCount = scraped;
+      var count = lastKnownCount;
 
+      // Only touch this tile at all if we have a trustworthy number (scraped now, or
+      // cached from an earlier visit to Overview this session). Otherwise leave it
+      // completely as-is — original label, original value — rather than showing a
+      // confident "Parts This Shift" label over a number we can't actually vouch for.
       var cyclesLabel = findLabelSpan(main, "cycles this job") || findLabelSpan(main, "parts this shift");
-      if (cyclesLabel) {
+      if (cyclesLabel && count != null) {
         cyclesLabel.textContent = "PARTS THIS SHIFT";
         var tile = cyclesLabel.parentElement;
         var valueRow = tile.querySelector(":scope > div");
         if (valueRow) {
           var spans = valueRow.querySelectorAll("span");
-          if (spans[0] && count != null) spans[0].textContent = count;
+          if (spans[0]) spans[0].textContent = count;
           if (spans[1]) spans[1].textContent = "parts";
         }
         var subtitle = tile.querySelectorAll(":scope > span")[1];
@@ -77,7 +94,7 @@
       // Sidebar mini-badge (under the status pill) — same label text, separate DOM
       // subtree (bare number + label sharing one parent <span>), needs its own pass.
       var aside = document.querySelector("aside");
-      if (aside) {
+      if (aside && count != null) {
         var w = document.createTreeWalker(aside, NodeFilter.SHOW_TEXT);
         var m, sideLabelNode = null, sideDigitNode = null;
         while ((m = w.nextNode())) {
