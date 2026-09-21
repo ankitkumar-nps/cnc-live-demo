@@ -19,6 +19,7 @@
   // could only get a correct number on Overview, silently showing a wrong number
   // under a confident "synced" label everywhere else.
   var lastKnownCount = null;
+  var lastKnownShiftLetter = null;
 
   function findLabelSpan(root, sub) {
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
@@ -69,8 +70,23 @@
         curRunLabel.parentElement.style.display = "none";
       }
 
+      // Shift counts only ever increase within a shift (same monotonic rule the
+      // backend CSV pipeline uses) — reject any scraped value LOWER than what's
+      // already cached. Guards against a transient bad read during a tab-switch DOM
+      // transition permanently corrupting the cache (observed 2026-09-21: a scrape
+      // mid-transition briefly returned a stale/wrong number and nothing ever
+      // re-corrected it since no further mutation fired to re-trigger apply()).
+      var nowLetter = currentShiftLetter();
+      if (nowLetter !== lastKnownShiftLetter) {
+        // Real shift change (A->B->C) — the monotonic guard below must not block this
+        // legitimate reset to a lower/zero count for the new shift.
+        lastKnownCount = null;
+        lastKnownShiftLetter = nowLetter;
+      }
       var scraped = currentShiftCount(main);
-      if (scraped != null) lastKnownCount = scraped;
+      if (scraped != null && (lastKnownCount == null || Number(scraped) >= Number(lastKnownCount))) {
+        lastKnownCount = scraped;
+      }
       var count = lastKnownCount;
 
       // Only touch this tile at all if we have a trustworthy number (scraped now, or
