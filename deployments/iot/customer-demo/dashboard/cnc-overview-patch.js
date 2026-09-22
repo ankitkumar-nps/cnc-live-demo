@@ -143,13 +143,19 @@
       })
       .then(function (data) {
         var last = function (k) { return data[k] && data[k][0] ? data[k][0].value : null; };
+        // Use the telemetry point's OWN ts, not Date.now() at receipt — the
+        // gateway->ThingsBoard->this fetch pipeline has real latency (measured ~13s),
+        // so run_elapsed_s is already stale by that much the instant it arrives here.
+        // Ticking forward from receipt-time silently ate that gap every poll, making
+        // "cycle running now" run ~13-20s permanently behind the real machine.
+        var runTs = data.run_elapsed_s && data.run_elapsed_s[0] ? data.run_elapsed_s[0].ts : Date.now();
         cycleData = {
           lastCycleS: last("cnc_cycle_time_s") != null ? Number(last("cnc_cycle_time_s")) : null,
           runElapsedS: last("run_elapsed_s") != null ? Number(last("run_elapsed_s")) : null,
           machineState: last("machine_state"),
-          fetchedAtMs: Date.now(), // baseline for ticking runElapsedS forward between fetches
+          fetchedAtMs: runTs,
         };
-        console.log("[cnc-patch] cycle data:", cycleData);
+        console.log("[cnc-patch] cycle data:", cycleData, "pipeline lag ms:", Date.now() - runTs);
       })
       .catch(function (e) {
         console.warn("[cnc-patch] cycle data fetch failed:", e && e.message);
