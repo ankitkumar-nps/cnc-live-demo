@@ -236,28 +236,47 @@
     if (digitNode) digitNode.textContent = count;
   }
 
+  // Anchored on each subtitle text ("last completed cycle" / "cycle running now" /
+  // "no cycle running") rather than the "Cycle Time" heading: verified live in the DOM
+  // that findTileRoot()-from-label grabs a container scoped to only ONE of the two
+  // number blocks (the tile's two sub-blocks aren't both within a few levels of the
+  // shared heading), so walking up from the label picked up nothing for the second
+  // number. Each subtitle's OWN nearest numeric ancestor is a single small div one
+  // level up — climbing from the subtitle itself avoids that.
+  function nearestSingleNumber(node, maxLevels) {
+    var el = node && node.parentElement;
+    for (var lvl = 0; lvl < maxLevels && el; lvl++) {
+      var nums = textNodes(el).filter(function (n) {
+        var v = n.textContent.trim();
+        return /^\d+(\.\d+)?$/.test(v) || v === "—";
+      });
+      if (nums.length === 1) return nums[0];
+      el = el.parentElement;
+    }
+    return null;
+  }
+
   // Only overwrites a number that's already rendered as a number (not the "—"
   // placeholder) AND only when our own telemetry agrees a cycle is actually running —
   // otherwise leaves the tile's own IDLE/"no cycle running" rendering alone, since that
   // part of the bundle is correct and shouldn't be touched.
   function patchCycleTime(main) {
     if (!cycleData) return;
-    var label = findByExactText(main, "cycle time");
-    if (!label) return;
-    var tile = findTileRoot(label);
-    var nums = [];
-    var nodes = textNodes(tile);
+    var nodes = textNodes(main);
+    var sub1 = null, sub2 = null;
     for (var i = 0; i < nodes.length; i++) {
-      if (nodes[i] === label) continue;
-      var t = nodes[i].textContent.trim();
-      if (/^\d+(\.\d+)?$/.test(t) || t === "—") nums.push(nodes[i]);
+      var t = nodes[i].textContent.trim().toLowerCase();
+      if (!sub1 && /^last completed cycle/.test(t)) sub1 = nodes[i];
+      if (!sub2 && /(cycle running now|no cycle running)/.test(t)) sub2 = nodes[i];
     }
-    if (nums[0] && cycleData.lastCycleS != null) {
-      nums[0].textContent = Math.round(cycleData.lastCycleS);
+    var lastCycleNode = nearestSingleNumber(sub1, 3);
+    if (lastCycleNode && cycleData.lastCycleS != null) {
+      lastCycleNode.textContent = Math.round(cycleData.lastCycleS);
     }
-    if (nums[1] && nums[1].textContent.trim() !== "—" &&
+    var runningNode = nearestSingleNumber(sub2, 3);
+    if (runningNode && runningNode.textContent.trim() !== "—" &&
         cycleData.machineState === "RUN" && cycleData.runElapsedS != null) {
-      nums[1].textContent = Math.round(cycleData.runElapsedS);
+      runningNode.textContent = Math.round(cycleData.runElapsedS);
     }
   }
 
