@@ -28,6 +28,7 @@
   var count = null; // last computed value; never show a label we can't back up
   var source = null; // "live" (ThingsBoard, this poll) or "csv" (fallback, hourly)
   var tbToken = null;
+  var cycleData = null; // { lastCycleS, runElapsedS, machineState } — see fetchCycleData()
 
   function istNow() {
     // A Date whose UTC getters read out the IST wall-clock, avoiding any dependence
@@ -123,6 +124,37 @@
       });
   }
 
+  // 2026-09-22: found the shipped "Cycle Time" tile bound to the WRONG telemetry key —
+  // its "last completed cycle" number matched `job_parts` (a part count) exactly, not
+  // `cnc_cycle_time_s` (the actual duration; confirmed against the HMI earlier). Same
+  // unreachable-source problem as everything else here, so same fix: rebind via patch,
+  // computed independently from ThingsBoard rather than trusting the bundle's own value.
+  function fetchCycleData() {
+    var url = TB_BASE + "/api/plugins/telemetry/DEVICE/" + DEVICE_ID +
+      "/values/timeseries?keys=cnc_cycle_time_s,run_elapsed_s,machine_state";
+    return (tbToken ? Promise.resolve(tbToken) : tbLogin())
+      .then(function (token) {
+        return fetch(url, { headers: { "X-Authorization": "Bearer " + token } });
+      })
+      .then(function (r) {
+        if (r.status === 401) { tbToken = null; throw new Error("token expired"); }
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        var last = function (k) { return data[k] && data[k][0] ? data[k][0].value : null; };
+        cycleData = {
+          lastCycleS: last("cnc_cycle_time_s") != null ? Number(last("cnc_cycle_time_s")) : null,
+          runElapsedS: last("run_elapsed_s") != null ? Number(last("run_elapsed_s")) : null,
+          machineState: last("machine_state"),
+        };
+        console.log("[cnc-patch] cycle data:", cycleData);
+      })
+      .catch(function (e) {
+        console.warn("[cnc-patch] cycle data fetch failed:", e && e.message);
+      });
+  }
+
   function textNodes(root) {
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     var out = [], n;
@@ -204,6 +236,31 @@
     if (digitNode) digitNode.textContent = count;
   }
 
+  // Only overwrites a number that's already rendered as a number (not the "—"
+  // placeholder) AND only when our own telemetry agrees a cycle is actually running —
+  // otherwise leaves the tile's own IDLE/"no cycle running" rendering alone, since that
+  // part of the bundle is correct and shouldn't be touched.
+  function patchCycleTime(main) {
+    if (!cycleData) return;
+    var label = findByExactText(main, "cycle time");
+    if (!label) return;
+    var tile = findTileRoot(label);
+    var nums = [];
+    var nodes = textNodes(tile);
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i] === label) continue;
+      var t = nodes[i].textContent.trim();
+      if (/^\d+(\.\d+)?$/.test(t) || t === "—") nums.push(nodes[i]);
+    }
+    if (nums[0] && cycleData.lastCycleS != null) {
+      nums[0].textContent = Math.round(cycleData.lastCycleS);
+    }
+    if (nums[1] && nums[1].textContent.trim() !== "—" &&
+        cycleData.machineState === "RUN" && cycleData.runElapsedS != null) {
+      nums[1].textContent = Math.round(cycleData.runElapsedS);
+    }
+  }
+
   function paint() {
     try {
       var main = document.querySelector("main");
@@ -211,12 +268,13 @@
       hideCurrentRun(main);
       patchMainTile(main);
       patchSidebarBadge();
+      patchCycleTime(main);
     } catch (e) {
       console.warn("cnc-overview-patch:", e);
     }
   }
 
-  fetchShiftCount().then(paint);
-  setInterval(function () { fetchShiftCount().then(paint); }, FETCH_MS);
+  Promise.all([fetchShiftCount(), fetchCycleData()]).then(paint);
+  setInterval(function () { Promise.all([fetchShiftCount(), fetchCycleData()]).then(paint); }, FETCH_MS);
   setInterval(paint, POLL_MS); // repaint often so a tab switch picks up the number immediately
 })();
