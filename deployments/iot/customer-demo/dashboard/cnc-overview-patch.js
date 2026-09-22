@@ -28,7 +28,7 @@
   var count = null; // last computed value; never show a label we can't back up
   var source = null; // "live" (ThingsBoard, this poll) or "csv" (fallback, hourly)
   var tbToken = null;
-  var cycleData = null; // { lastCycleS, runElapsedS, machineState } — see fetchCycleData()
+  var cycleData = null; // { lastCycleS, runElapsedS, machineState, fetchedAtMs } — see fetchCycleData()
 
   function istNow() {
     // A Date whose UTC getters read out the IST wall-clock, avoiding any dependence
@@ -147,6 +147,7 @@
           lastCycleS: last("cnc_cycle_time_s") != null ? Number(last("cnc_cycle_time_s")) : null,
           runElapsedS: last("run_elapsed_s") != null ? Number(last("run_elapsed_s")) : null,
           machineState: last("machine_state"),
+          fetchedAtMs: Date.now(), // baseline for ticking runElapsedS forward between fetches
         };
         console.log("[cnc-patch] cycle data:", cycleData);
       })
@@ -276,7 +277,12 @@
     var runningNode = nearestSingleNumber(sub2, 3);
     if (runningNode && runningNode.textContent.trim() !== "—" &&
         cycleData.machineState === "RUN" && cycleData.runElapsedS != null) {
-      runningNode.textContent = Math.round(cycleData.runElapsedS);
+      // Tick forward from the fetch baseline instead of showing the 30s-stale fetched
+      // value as-is — otherwise this drifts behind the native "cutting Xs" tile (which
+      // updates every second) by up to one FETCH_MS interval, looking inconsistent
+      // even though both numbers are correct for their own last-known instant.
+      var elapsedSinceFetch = (Date.now() - cycleData.fetchedAtMs) / 1000;
+      runningNode.textContent = Math.round(cycleData.runElapsedS + elapsedSinceFetch);
     }
   }
 
