@@ -266,17 +266,47 @@
   // shared heading), so walking up from the label picked up nothing for the second
   // number. Each subtitle's OWN nearest numeric ancestor is a single small div one
   // level up — climbing from the subtitle itself avoids that.
+  // Matches a bare number OR our own "Xm Ys"/"Xh Ym Zs" formatted output — needed so
+  // re-finding this same node on the NEXT paint() still works after formatMinSec() has
+  // already replaced its content (a bare-digit-only regex would stop matching its own
+  // output and silently break re-patching every poll after the first).
+  var NUMBER_OR_FORMATTED = /^\d+(\.\d+)?$|^(\d+h )?\d+m \d+s$/;
   function nearestSingleNumber(node, maxLevels) {
     var el = node && node.parentElement;
     for (var lvl = 0; lvl < maxLevels && el; lvl++) {
       var nums = textNodes(el).filter(function (n) {
         var v = n.textContent.trim();
-        return /^\d+(\.\d+)?$/.test(v) || v === "—";
+        return NUMBER_OR_FORMATTED.test(v) || v === "—";
       });
       if (nums.length === 1) return nums[0];
       el = el.parentElement;
     }
     return null;
+  }
+
+  // The "s" unit is its own separate text node next to the number (confirmed live in
+  // the DOM). Needed so a "Xm Ys" format can replace the number cleanly instead of
+  // leaving a stray "s" dangling after it (e.g. "8m 44ss").
+  function findUnitNode(numberNode, maxLevels) {
+    var el = numberNode && numberNode.parentElement;
+    for (var lvl = 0; lvl < maxLevels && el; lvl++) {
+      var units = textNodes(el).filter(function (n) {
+        return n !== numberNode && n.textContent.trim() === "s";
+      });
+      if (units.length === 1) return units[0];
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  // "524" -> "8m 44s"; also handles hours for anything that ever runs that long.
+  function formatMinSec(totalSeconds) {
+    var s = Math.max(0, Math.round(totalSeconds));
+    var h = Math.floor(s / 3600);
+    var m = Math.floor((s % 3600) / 60);
+    var sec = s % 60;
+    if (h > 0) return h + "h " + m + "m " + sec + "s";
+    return m + "m " + sec + "s";
   }
 
   // Only overwrites a number that's already rendered as a number (not the "—"
@@ -302,7 +332,9 @@
     }
     var lastCycleNode = nearestSingleNumber(sub1, 3);
     if (lastCycleNode && cycleData.lastCycleS != null) {
-      lastCycleNode.textContent = Math.round(cycleData.lastCycleS);
+      var lastCycleUnit = findUnitNode(lastCycleNode, 3);
+      lastCycleNode.textContent = formatMinSec(cycleData.lastCycleS);
+      if (lastCycleUnit) lastCycleUnit.textContent = "";
     }
     var runningNode = nearestSingleNumber(sub2, 3);
     if (runningNode && runningNode.textContent.trim() !== "—" &&
@@ -312,7 +344,9 @@
       // updates every second) by up to one FETCH_MS interval, looking inconsistent
       // even though both numbers are correct for their own last-known instant.
       var elapsedSinceFetch = (Date.now() - cycleData.fetchedAtMs) / 1000;
-      runningNode.textContent = Math.round(cycleData.runElapsedS + elapsedSinceFetch);
+      var runningUnit = findUnitNode(runningNode, 3);
+      runningNode.textContent = formatMinSec(cycleData.runElapsedS + elapsedSinceFetch);
+      if (runningUnit) runningUnit.textContent = "";
     }
   }
 
