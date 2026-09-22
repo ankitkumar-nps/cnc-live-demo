@@ -129,9 +129,25 @@
   // `cnc_cycle_time_s` (the actual duration; confirmed against the HMI earlier). Same
   // unreachable-source problem as everything else here, so same fix: rebind via patch,
   // computed independently from ThingsBoard rather than trusting the bundle's own value.
+  //
+  // 2026-09-22 (later): switched from cnc_cycle_time_s/run_elapsed_s to
+  // last_cycle_time_s/cutting_time_s. The gateway (pashupati_808d_tb.py) already
+  // computes BOTH, and they answer different questions:
+  //   cnc_cycle_time_s = exact $AC_CYCLE_TIME, program-start to M30/Reset — INCLUDES
+  //                       any wait/interlock time (e.g. a chuck-clamp fault mid-cycle).
+  //                       Matches the HMI's "Program" field exactly, but is not "cutting
+  //                       time" — confirmed against Siemens' own system-variable manual.
+  //   last_cycle_time_s = gateway-summed genuine RUN (status 0x21) segments only —
+  //                       excludes any IDLE/wait/interrupted gaps entirely. This is what
+  //                       was actually wanted: real cutting time, faults excluded.
+  // Verified 2026-09-22: on a cycle with a chuck-fault wait, cnc_cycle_time_s read
+  // 566.5s while last_cycle_time_s read 521.9s — matching the machine's own
+  // Program+Time-to-go baseline (~524s) for a clean run of this program almost exactly.
+  // cutting_time_s is the equivalent LIVE (in-progress) figure — accumulates across RUN
+  // segments and freezes during a wait, rather than resetting like run_elapsed_s did.
   function fetchCycleData() {
     var url = TB_BASE + "/api/plugins/telemetry/DEVICE/" + DEVICE_ID +
-      "/values/timeseries?keys=cnc_cycle_time_s,run_elapsed_s,machine_state";
+      "/values/timeseries?keys=last_cycle_time_s,cutting_time_s,machine_state";
     return (tbToken ? Promise.resolve(tbToken) : tbLogin())
       .then(function (token) {
         return fetch(url, { headers: { "X-Authorization": "Bearer " + token } });
@@ -145,13 +161,13 @@
         var last = function (k) { return data[k] && data[k][0] ? data[k][0].value : null; };
         // Use the telemetry point's OWN ts, not Date.now() at receipt — the
         // gateway->ThingsBoard->this fetch pipeline has real latency (measured ~13s),
-        // so run_elapsed_s is already stale by that much the instant it arrives here.
-        // Ticking forward from receipt-time silently ate that gap every poll, making
-        // "cycle running now" run ~13-20s permanently behind the real machine.
-        var runTs = data.run_elapsed_s && data.run_elapsed_s[0] ? data.run_elapsed_s[0].ts : Date.now();
+        // so a live-ticking value is already stale by that much the instant it arrives
+        // here. Ticking forward from receipt-time silently ate that gap every poll,
+        // making "cycle running now" run ~13-20s permanently behind the real machine.
+        var runTs = data.cutting_time_s && data.cutting_time_s[0] ? data.cutting_time_s[0].ts : Date.now();
         cycleData = {
-          lastCycleS: last("cnc_cycle_time_s") != null ? Number(last("cnc_cycle_time_s")) : null,
-          runElapsedS: last("run_elapsed_s") != null ? Number(last("run_elapsed_s")) : null,
+          lastCycleS: last("last_cycle_time_s") != null ? Number(last("last_cycle_time_s")) : null,
+          runElapsedS: last("cutting_time_s") != null ? Number(last("cutting_time_s")) : null,
           machineState: last("machine_state"),
           fetchedAtMs: runTs,
         };
@@ -274,7 +290,15 @@
     for (var i = 0; i < nodes.length; i++) {
       var t = nodes[i].textContent.trim().toLowerCase();
       if (!sub1 && /^last completed cycle/.test(t)) sub1 = nodes[i];
-      if (!sub2 && /(cycle running now|no cycle running)/.test(t)) sub2 = nodes[i];
+      if (!sub2 && /(cycle running now|no cycle running|cutting time so far)/.test(t)) sub2 = nodes[i];
+    }
+    // Relabel to make clear these are cutting-only figures (last_cycle_time_s /
+    // cutting_time_s), not the machine's raw $AC_CYCLE_TIME — the two can legitimately
+    // differ by however long a mid-cycle fault/wait took, and that shouldn't look like
+    // a data error to whoever's reading the tile.
+    if (sub1) sub1.textContent = "last completed cycle (cutting only) · from the machine";
+    if (sub2 && /cycle running now/.test(sub2.textContent.trim().toLowerCase())) {
+      sub2.textContent = "cutting time so far · from the machine";
     }
     var lastCycleNode = nearestSingleNumber(sub1, 3);
     if (lastCycleNode && cycleData.lastCycleS != null) {
