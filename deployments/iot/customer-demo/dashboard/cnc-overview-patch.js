@@ -219,11 +219,9 @@
   }
 
   // v17 (2026-09-23): user asked to drop the current-run cards and anything not needed.
-  // Removed: the big status ring (its "TOTAL" odometer/legend), the current-run /
-  // "cutting time so far" tile, the OEE "coming soon" tile + nav item, and the unused
-  // "part number not set" tile.
+  // Removed: the current-run / "cutting time so far" tile, the OEE "coming soon" tile + nav item, and the unused
+  // "part number not set" tile. The green cutting ring stays (user wants it).
   function hideUnneeded(main) {
-    hideCardWith(main, function (t) { return t === "total"; });
     hideCardWith(main, function (t) {
       return t === "current run" || /^(no cycle running|cutting time so far|cycle running now)/.test(t);
     });
