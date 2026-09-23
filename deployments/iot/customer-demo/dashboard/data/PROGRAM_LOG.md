@@ -33,7 +33,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 09-17 02:01 | 09-17 03:36 | SPFH_10_OD_ROUGH | 14 |
+| 09-17 02:02 | 09-17 03:36 | SPFH_10_OD_ROUGH | 14 |
 | 09-17 03:36 | 09-17 03:37 | SPFD_8_FINISH | 0 |
 | 09-17 03:38 | 09-17 03:38 | SPFH_6_ID_FINISH | 0 |
 | 09-17 03:38 | 09-17 03:39 | SPFD_8_FINISH | 0 |
