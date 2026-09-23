@@ -241,7 +241,7 @@
   // chart labels "855s") and a bare number with a separate "s" unit node ("581.3" + "s").
   // Skips "updated 5s ago" and anything already formatted (re-running on our own output
   // would turn "9m 41s" into "9m 0m 41s").
-  var ALREADY_FORMATTED = /\d+m \d+s/;
+  var ALREADY_FORMATTED = /\d+m \d+s?$|\d+m \d+s/;
   function formatAllSeconds(main) {
     var nodes = textNodes(main);
     for (var i = 0; i < nodes.length; i++) {
@@ -249,8 +249,7 @@
       var t = raw.trim();
       if (!t || ALREADY_FORMATTED.test(t) || /ago/i.test(t)) continue;
       if (/^\d+(\.\d+)?$/.test(t) && nodes[i + 1] && nodes[i + 1].textContent.trim() === "s") {
-        nodes[i].textContent = formatMinSec(Number(t));
-        nodes[i + 1].textContent = "";
+        nodes[i].textContent = formatMinSecNoUnit(Number(t));
         continue;
       }
       if (/\b\d+(\.\d+)?s\b/.test(t)) {
@@ -333,7 +332,7 @@
   // re-finding this same node on the NEXT paint() still works after formatMinSec() has
   // already replaced its content (a bare-digit-only regex would stop matching its own
   // output and silently break re-patching every poll after the first).
-  var NUMBER_OR_FORMATTED = /^\d+(\.\d+)?$|^(\d+h )?\d+m \d+s$/;
+  var NUMBER_OR_FORMATTED = /^\d+(\.\d+)?$|^(\d+h )?\d+m \d+s?$/;
   function nearestSingleNumber(node, maxLevels) {
     var el = node && node.parentElement;
     for (var lvl = 0; lvl < maxLevels && el; lvl++) {
@@ -372,6 +371,11 @@
     return m + "m " + sec + "s";
   }
 
+  // v20: never blank the page's own "s" unit node. React re-renders the NUMBER on every
+  // tick but leaves an unchanged unit node alone, so a blanked unit stayed blank and the
+  // live ring read "19" with no unit. Write "3m 21" into the number and keep the "s".
+  function formatMinSecNoUnit(totalSeconds) { return formatMinSec(totalSeconds).slice(0, -1); }
+
   // Only overwrites a number that's already rendered as a number (not the "—"
   // placeholder) AND only when our own telemetry agrees a cycle is actually running —
   // otherwise leaves the tile's own IDLE/"no cycle running" rendering alone, since that
@@ -396,6 +400,8 @@
     var lastCycleNode = nearestSingleNumber(sub1, 3);
     if (lastCycleNode && cycleData.lastCycleS != null) {
       var lastCycleUnit = findUnitNode(lastCycleNode, 3);
+      // this tile's unit is a separate spaced element ("3m 22 s"), and patchCycleTime
+      // rewrites it from telemetry every paint anyway -> full format + blank unit is safe here
       lastCycleNode.textContent = formatMinSec(cycleData.lastCycleS);
       if (lastCycleUnit) lastCycleUnit.textContent = "";
     }
@@ -408,8 +414,10 @@
       // even though both numbers are correct for their own last-known instant.
       var elapsedSinceFetch = (Date.now() - cycleData.fetchedAtMs) / 1000;
       var runningUnit = findUnitNode(runningNode, 3);
-      runningNode.textContent = formatMinSec(cycleData.runElapsedS + elapsedSinceFetch);
-      if (runningUnit) runningUnit.textContent = "";
+      runningNode.textContent = runningUnit
+        ? formatMinSecNoUnit(cycleData.runElapsedS + elapsedSinceFetch)
+        : formatMinSec(cycleData.runElapsedS + elapsedSinceFetch);
+      if (runningUnit) runningUnit.textContent = "s";
     }
   }
 
@@ -426,6 +434,17 @@
       console.warn("cnc-overview-patch:", e);
     }
   }
+
+  var mo = new MutationObserver(function () {
+    var m = document.querySelector("main");
+    if (m) { try { formatAllSeconds(m); } catch (e) {} }
+  });
+  function observe() {
+    var m = document.querySelector("main");
+    if (m) mo.observe(m, { subtree: true, childList: true, characterData: true });
+    else setTimeout(observe, 500);
+  }
+  observe();
 
   Promise.all([fetchShiftCount(), fetchCycleData()]).then(paint);
   setInterval(function () { Promise.all([fetchShiftCount(), fetchCycleData()]).then(paint); }, FETCH_MS);
