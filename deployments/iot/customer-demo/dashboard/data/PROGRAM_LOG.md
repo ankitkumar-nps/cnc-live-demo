@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-23 21:32 IST_
+_Window: last 7 days · generated 2026-09-23 21:47 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -8,8 +8,8 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
 | SPFH_8"16"IDFINISH | 7 | 205 | 102 |
-| SPFD_10_OD_ROUGH | 1 | 84 | 42 |
-| SPFH_10_OD_ROUGH | 2 | 65 | 32 |
+| SPFD_10_OD_ROUGH | 1 | 85 | 42 |
+| SPFH_10_OD_ROUGH | 2 | 63 | 31 |
 | SPFBL_10"1STSIDE | 1 | 12 | 6 |
 | P255S200001 | 1 | 9 | 4 |
 
@@ -17,7 +17,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-09-16 | SPFH_10_OD_ROUGH | 27 | 13 |
+| 2026-09-16 | SPFH_10_OD_ROUGH | 25 | 12 |
 | 2026-09-17 | SPFH_10_OD_ROUGH | 38 | 19 |
 | 2026-09-17 | SPFH_8"16"IDFINISH | 7 | 3 |
 | 2026-09-18 | P255S200001 | 9 | 4 |
@@ -27,14 +27,14 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-09-20 | SPFH_8"16"IDFINISH | 22 | 11 |
 | 2026-09-21 | SPFH_8"16"IDFINISH | 29 | 14 |
 | 2026-09-22 | SPFH_8"16"IDFINISH | 14 | 7 |
-| 2026-09-23 | SPFD_10_OD_ROUGH | 84 | 42 |
+| 2026-09-23 | SPFD_10_OD_ROUGH | 85 | 42 |
 | 2026-09-23 | SPFH_8"16"IDFINISH | 18 | 9 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 09-16 21:32 | 09-17 03:36 | SPFH_10_OD_ROUGH | 65 |
+| 09-16 21:47 | 09-17 03:36 | SPFH_10_OD_ROUGH | 63 |
 | 09-17 03:36 | 09-17 03:37 | SPFD_8_FINISH | 0 |
 | 09-17 03:38 | 09-17 03:38 | SPFH_6_ID_FINISH | 0 |
 | 09-17 03:38 | 09-17 03:39 | SPFD_8_FINISH | 0 |
@@ -65,4 +65,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-21 18:30 | 09-21 21:33 | SPFH_8"16"IDFINISH | 11 |
 | 09-22 14:47 | 09-22 14:47 | SPFH_8"16"IDFINISH | 0 |
 | 09-22 15:19 | 09-23 10:38 | SPFH_8"16"IDFINISH | 32 |
-| 09-23 10:38 | 09-23 21:31 | SPFD_10_OD_ROUGH | 84 |
+| 09-23 10:38 | 09-23 21:45 | SPFD_10_OD_ROUGH | 85 |
