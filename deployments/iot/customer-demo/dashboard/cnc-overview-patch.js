@@ -193,9 +193,74 @@
     return null;
   }
 
-  function hideCurrentRun(main) {
-    var node = findByExactText(main, "current run");
-    if (node && node.parentElement) node.parentElement.style.display = "none";
+  // The card a text node belongs to: either a tile (its parent is a CSS grid) or a
+  // top-level section (its parent also holds a grid, e.g. the big status ring card).
+  function cardOf(node) {
+    var el = node && node.parentElement;
+    while (el && el.parentElement && el.tagName !== "MAIN") {
+      var p = el.parentElement;
+      if (getComputedStyle(p).display === "grid") return el;
+      for (var i = 0; i < p.children.length; i++) {
+        var c = p.children[i];
+        if (c !== el && getComputedStyle(c).display === "grid") return el;
+      }
+      el = p;
+    }
+    return null;
+  }
+
+  function hideCardWith(main, test) {
+    var nodes = textNodes(main);
+    for (var i = 0; i < nodes.length; i++) {
+      if (!test(nodes[i].textContent.trim().toLowerCase())) continue;
+      var card = cardOf(nodes[i]);
+      if (card) card.style.display = "none";
+    }
+  }
+
+  // v17 (2026-09-23): user asked to drop the current-run cards and anything not needed.
+  // Removed: the big status ring (its "TOTAL" odometer/legend), the current-run /
+  // "cutting time so far" tile, the OEE "coming soon" tile + nav item, and the unused
+  // "part number not set" tile.
+  function hideUnneeded(main) {
+    hideCardWith(main, function (t) { return t === "total"; });
+    hideCardWith(main, function (t) {
+      return t === "current run" || /^(no cycle running|cutting time so far|cycle running now)/.test(t);
+    });
+    hideCardWith(main, function (t) { return t === "machine efficiency (oee)"; });
+    hideCardWith(main, function (t) { return t === "part number"; });
+    var aside = document.querySelector("aside");
+    if (aside) {
+      var btns = aside.querySelectorAll("button, a");
+      for (var i = 0; i < btns.length; i++) {
+        if (btns[i].innerText.trim() === "Efficiency (OEE)") btns[i].style.display = "none";
+      }
+    }
+  }
+
+  // Every remaining seconds value on every tab -> "Xm Ys", same as the HMI, so nobody
+  // has to divide by 60. Handles both shapes the bundle renders: inline ("avg 593.6s",
+  // chart labels "855s") and a bare number with a separate "s" unit node ("581.3" + "s").
+  // Skips "updated 5s ago" and anything already formatted (re-running on our own output
+  // would turn "9m 41s" into "9m 0m 41s").
+  var ALREADY_FORMATTED = /\d+m \d+s/;
+  function formatAllSeconds(main) {
+    var nodes = textNodes(main);
+    for (var i = 0; i < nodes.length; i++) {
+      var raw = nodes[i].textContent;
+      var t = raw.trim();
+      if (!t || ALREADY_FORMATTED.test(t) || /ago/i.test(t)) continue;
+      if (/^\d+(\.\d+)?$/.test(t) && nodes[i + 1] && nodes[i + 1].textContent.trim() === "s") {
+        nodes[i].textContent = formatMinSec(Number(t));
+        nodes[i + 1].textContent = "";
+        continue;
+      }
+      if (/\b\d+(\.\d+)?s\b/.test(t)) {
+        nodes[i].textContent = raw.replace(/\b(\d+(?:\.\d+)?)s\b/g, function (_, v) {
+          return formatMinSec(Number(v));
+        });
+      }
+    }
   }
 
   // Deliberately NOT assuming a specific DOM nesting (e.g. "the value lives in a
@@ -354,10 +419,11 @@
     try {
       var main = document.querySelector("main");
       if (!main) return;
-      hideCurrentRun(main);
+      hideUnneeded(main);
       patchMainTile(main);
       patchSidebarBadge();
       patchCycleTime(main);
+      formatAllSeconds(main);
     } catch (e) {
       console.warn("cnc-overview-patch:", e);
     }
