@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-25 08:33 IST_
+_Window: last 7 days · generated 2026-09-25 09:34 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,8 +7,8 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| SPFH_8"16"IDFINISH | 6 | 183 | 91 |
-| BF_6_ID_ | 2 | 177 | 88 |
+| SPFH_8"16"IDFINISH | 6 | 180 | 90 |
+| BF_6_ID_ | 2 | 180 | 90 |
 | SPFD_10_OD_ROUGH | 2 | 98 | 49 |
 | SPFBL_10"1STSIDE | 1 | 12 | 6 |
 | P255S200001 | 1 | 9 | 4 |
@@ -18,7 +18,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
 | 2026-09-18 | P255S200001 | 9 | 4 |
-| 2026-09-18 | SPFH_8"16"IDFINISH | 53 | 26 |
+| 2026-09-18 | SPFH_8"16"IDFINISH | 50 | 25 |
 | 2026-09-19 | SPFBL_10"1STSIDE | 12 | 6 |
 | 2026-09-19 | SPFH_8"16"IDFINISH | 47 | 23 |
 | 2026-09-20 | SPFH_8"16"IDFINISH | 22 | 11 |
@@ -28,13 +28,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-09-23 | SPFH_8"16"IDFINISH | 18 | 9 |
 | 2026-09-24 | BF_6_ID_ | 146 | 73 |
 | 2026-09-24 | SPFD_10_OD_ROUGH | 12 | 6 |
-| 2026-09-25 | BF_6_ID_ | 31 | 15 |
+| 2026-09-25 | BF_6_ID_ | 34 | 17 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 09-18 08:33 | 09-18 19:35 | SPFH_8"16"IDFINISH | 44 |
+| 09-18 09:33 | 09-18 19:35 | SPFH_8"16"IDFINISH | 41 |
 | 09-18 19:36 | 09-18 21:29 | P255S200001 | 9 |
 | 09-18 21:30 | 09-18 23:00 | SPFH_8"16"IDFINISH | 5 |
 | 09-18 23:02 | 09-18 23:05 | SPFH_8"16"IDFINISH | 0 |
@@ -63,4 +63,5 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-23 10:38 | 09-24 01:28 | SPFD_10_OD_ROUGH | 86 |
 | 09-24 06:14 | 09-24 07:31 | SPFD_10_OD_ROUGH | 12 |
 | 09-24 07:31 | 09-24 23:53 | BF_6_ID_ | 146 |
-| 09-25 06:10 | 09-25 08:32 | BF_6_ID_ | 31 |
+| 09-25 06:10 | 09-25 08:41 | BF_6_ID_ | 34 |
+| 09-25 09:28 | 09-25 09:28 | BF_6_ID_ | 0 |
