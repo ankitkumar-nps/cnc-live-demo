@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-28 16:47 IST_
+_Window: last 7 days · generated 2026-09-28 17:02 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,17 +7,17 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| BF_6_ID_ | 5 | 592 | 296 |
+| BF_6_ID_ | 5 | 596 | 298 |
 | SPFH_4"_RW | 2 | 100 | 50 |
 | SPFD_10_OD_ROUGH | 2 | 98 | 49 |
 | PFD_10"ID | 1 | 93 | 46 |
-| SPFH_8"16"IDFINISH | 3 | 48 | 24 |
+| SPFH_8"16"IDFINISH | 3 | 47 | 23 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-09-21 | SPFH_8"16"IDFINISH | 16 | 8 |
+| 2026-09-21 | SPFH_8"16"IDFINISH | 15 | 7 |
 | 2026-09-22 | SPFH_8"16"IDFINISH | 14 | 7 |
 | 2026-09-23 | SPFD_10_OD_ROUGH | 86 | 43 |
 | 2026-09-23 | SPFH_8"16"IDFINISH | 18 | 9 |
@@ -29,13 +29,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-09-26 | SPFH_4"_RW | 78 | 39 |
 | 2026-09-27 | BF_6_ID_ | 19 | 9 |
 | 2026-09-27 | SPFH_4"_RW | 22 | 11 |
-| 2026-09-28 | BF_6_ID_ | 126 | 63 |
+| 2026-09-28 | BF_6_ID_ | 130 | 65 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 09-21 16:47 | 09-21 18:14 | SPFH_8"16"IDFINISH | 5 |
+| 09-21 17:02 | 09-21 18:14 | SPFH_8"16"IDFINISH | 4 |
 | 09-21 18:30 | 09-21 21:33 | SPFH_8"16"IDFINISH | 11 |
 | 09-22 14:47 | 09-22 14:47 | SPFH_8"16"IDFINISH | 0 |
 | 09-22 15:19 | 09-23 10:38 | SPFH_8"16"IDFINISH | 32 |
@@ -58,4 +58,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-26 17:34 | 09-26 17:34 | SPFH_4_ID_1ST | 0 |
 | 09-26 17:34 | 09-27 01:20 | SPFH_4"_RW | 100 |
 | 09-27 01:20 | 09-27 05:29 | BF_6_ID_ | 19 |
-| 09-28 06:12 | 09-28 16:45 | BF_6_ID_ | 126 |
+| 09-28 06:12 | 09-28 17:00 | BF_6_ID_ | 130 |
