@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-28 12:17 IST_
+_Window: last 7 days · generated 2026-09-28 12:30 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,17 +7,17 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| BF_6_ID_ | 5 | 538 | 269 |
+| BF_6_ID_ | 5 | 541 | 270 |
 | SPFH_4"_RW | 2 | 100 | 50 |
 | SPFD_10_OD_ROUGH | 2 | 98 | 49 |
 | PFD_10"ID | 1 | 93 | 46 |
-| SPFH_8"16"IDFINISH | 3 | 61 | 30 |
+| SPFH_8"16"IDFINISH | 3 | 60 | 30 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-09-21 | SPFH_8"16"IDFINISH | 29 | 14 |
+| 2026-09-21 | SPFH_8"16"IDFINISH | 28 | 14 |
 | 2026-09-22 | SPFH_8"16"IDFINISH | 14 | 7 |
 | 2026-09-23 | SPFD_10_OD_ROUGH | 86 | 43 |
 | 2026-09-23 | SPFH_8"16"IDFINISH | 18 | 9 |
@@ -29,13 +29,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-09-26 | SPFH_4"_RW | 78 | 39 |
 | 2026-09-27 | BF_6_ID_ | 19 | 9 |
 | 2026-09-27 | SPFH_4"_RW | 22 | 11 |
-| 2026-09-28 | BF_6_ID_ | 72 | 36 |
+| 2026-09-28 | BF_6_ID_ | 75 | 37 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 09-21 12:17 | 09-21 12:46 | SPFH_8"16"IDFINISH | 2 |
+| 09-21 12:31 | 09-21 12:46 | SPFH_8"16"IDFINISH | 1 |
 | 09-21 13:48 | 09-21 13:54 | SPFH_8"16"IDFINISH | 0 |
 | 09-21 14:15 | 09-21 18:14 | SPFH_8"16"IDFINISH | 16 |
 | 09-21 18:30 | 09-21 21:33 | SPFH_8"16"IDFINISH | 11 |
@@ -60,4 +60,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-26 17:34 | 09-26 17:34 | SPFH_4_ID_1ST | 0 |
 | 09-26 17:34 | 09-27 01:20 | SPFH_4"_RW | 100 |
 | 09-27 01:20 | 09-27 05:29 | BF_6_ID_ | 19 |
-| 09-28 06:12 | 09-28 12:15 | BF_6_ID_ | 72 |
+| 09-28 06:12 | 09-28 12:30 | BF_6_ID_ | 75 |
