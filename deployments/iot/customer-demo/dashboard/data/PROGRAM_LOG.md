@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-29 09:32 IST_
+_Window: last 7 days · generated 2026-09-29 09:47 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -59,4 +59,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-26 17:34 | 09-27 01:20 | SPFH_4"_RW | 100 |
 | 09-27 01:20 | 09-27 05:29 | BF_6_ID_ | 19 |
 | 09-28 06:12 | 09-29 01:38 | BF_6_ID_ | 223 |
-| 09-29 01:39 | 09-29 09:30 | BF_6"_OD_FINISH | 117 |
+| 09-29 01:39 | 09-29 09:45 | BF_6"_OD_FINISH | 117 |
