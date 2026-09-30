@@ -27,6 +27,11 @@
 
   var count = null; // last computed value; never show a label we can't back up
   var source = null; // "live" (ThingsBoard, this poll) or "csv" (fallback, hourly)
+  // 2026-09-30: ThingsBoard reads went to 15-31 s / HTTP 500. Every fetch now has a
+  // 40 s timeout, and a live count for the CURRENT shift is kept on a failed poll
+  // instead of being replaced by the hourly CSV (which lags up to an hour -> showed 0).
+  var TIMEOUT_MS = 40000;
+  var liveShift = null; // shift-start ms the last live count belongs to
   var tbToken = null;
   var cycleData = null; // { lastCycleS, runElapsedS, machineState, fetchedAtMs } — see fetchCycleData()
 
@@ -50,6 +55,7 @@
   function tbLogin() {
     return fetch(TB_BASE + "/api/auth/login/public", {
       method: "POST",
+      signal: AbortSignal.timeout(TIMEOUT_MS),
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ publicId: PUBLIC_ID }),
     })
@@ -89,7 +95,7 @@
       "&orderBy=ASC&agg=NONE&limit=5000";
     return (tbToken ? Promise.resolve(tbToken) : tbLogin())
       .then(function (token) {
-        return fetch(url, { headers: { "X-Authorization": "Bearer " + token } });
+        return fetch(url, { headers: { "X-Authorization": "Bearer " + token }, signal: AbortSignal.timeout(TIMEOUT_MS) });
       })
       .then(function (r) {
         if (r.status === 401) { tbToken = null; throw new Error("token expired"); }
@@ -111,9 +117,11 @@
           " points=" + pts.length + " computed=" + total + " (prev count=" + count + ")");
         count = total;
         source = "live";
+        liveShift = shiftStart;
       })
       .catch(function (e) {
-        console.warn("[cnc-patch] live fetch failed, falling back to CSV:", e && e.message);
+        console.warn("[cnc-patch] live fetch failed:", e && e.message);
+        if (liveShift === currentShiftStartMs() && count != null) return; // keep last live value for this shift
         return fetchShiftCountFromCsv()
           .then(function (csvCount) {
             console.log("[cnc-patch] csv fallback result: " + csvCount + " (prev count=" + count + ")");
@@ -150,7 +158,7 @@
       "/values/timeseries?keys=last_cycle_time_s,cutting_time_s,machine_state";
     return (tbToken ? Promise.resolve(tbToken) : tbLogin())
       .then(function (token) {
-        return fetch(url, { headers: { "X-Authorization": "Bearer " + token } });
+        return fetch(url, { headers: { "X-Authorization": "Bearer " + token }, signal: AbortSignal.timeout(TIMEOUT_MS) });
       })
       .then(function (r) {
         if (r.status === 401) { tbToken = null; throw new Error("token expired"); }
