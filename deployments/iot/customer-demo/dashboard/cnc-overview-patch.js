@@ -455,6 +455,8 @@
   observe();
 
   Promise.all([fetchShiftCount(), fetchCycleData()]).then(paint);
-  setInterval(function () { Promise.all([fetchShiftCount(), fetchCycleData()]).then(paint); }, FETCH_MS);
+  // 2026-09-30: cycle time/state fast (15 s), shift parts count slow (2 min) to spare ThingsBoard.
+  setInterval(function () { fetchCycleData().then(paint); }, 15000);
+  setInterval(function () { fetchShiftCount().then(paint); }, 120000);
   setInterval(paint, POLL_MS); // repaint often so a tab switch picks up the number immediately
 })();
