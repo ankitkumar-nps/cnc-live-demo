@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-09-30 19:30 IST_
+_Window: last 7 days · generated 2026-09-30 19:45 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -8,17 +8,17 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
 | BF_6_ID_ | 6 | 689 | 344 |
-| PFI_4894_ID | 2 | 223 | 111 |
+| PFI_4894_ID | 2 | 224 | 112 |
 | BF_6"_OD_FINISH | 1 | 165 | 82 |
 | SPFH_4"_RW | 2 | 100 | 50 |
 | PFD_10"ID | 1 | 93 | 46 |
-| SPFD_10_OD_ROUGH | 2 | 38 | 19 |
+| SPFD_10_OD_ROUGH | 2 | 35 | 17 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-09-23 | SPFD_10_OD_ROUGH | 26 | 13 |
+| 2026-09-23 | SPFD_10_OD_ROUGH | 23 | 11 |
 | 2026-09-24 | BF_6_ID_ | 146 | 73 |
 | 2026-09-24 | SPFD_10_OD_ROUGH | 12 | 6 |
 | 2026-09-25 | BF_6_ID_ | 191 | 95 |
@@ -31,13 +31,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-09-29 | BF_6"_OD_FINISH | 165 | 82 |
 | 2026-09-29 | BF_6_ID_ | 18 | 9 |
 | 2026-09-29 | PFI_4894_ID | 79 | 39 |
-| 2026-09-30 | PFI_4894_ID | 144 | 72 |
+| 2026-09-30 | PFI_4894_ID | 145 | 72 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 09-23 19:31 | 09-24 01:28 | SPFD_10_OD_ROUGH | 26 |
+| 09-23 19:46 | 09-24 01:28 | SPFD_10_OD_ROUGH | 23 |
 | 09-24 06:14 | 09-24 07:31 | SPFD_10_OD_ROUGH | 12 |
 | 09-24 07:31 | 09-24 23:53 | BF_6_ID_ | 146 |
 | 09-25 06:10 | 09-25 08:41 | BF_6_ID_ | 34 |
@@ -59,4 +59,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-28 06:12 | 09-29 01:38 | BF_6_ID_ | 223 |
 | 09-29 01:39 | 09-29 13:15 | BF_6"_OD_FINISH | 165 |
 | 09-29 13:16 | 09-29 20:31 | PFI_4894_ID | 52 |
-| 09-29 20:34 | 09-30 19:30 | PFI_4894_ID | 171 |
+| 09-29 20:34 | 09-30 19:45 | PFI_4894_ID | 172 |
