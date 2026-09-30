@@ -30,7 +30,7 @@
   // 2026-09-30: ThingsBoard reads went to 15-31 s / HTTP 500. Every fetch now has a
   // 40 s timeout, and a live count for the CURRENT shift is kept on a failed poll
   // instead of being replaced by the hourly CSV (which lags up to an hour -> showed 0).
-  var TIMEOUT_MS = 40000;
+  var TIMEOUT_MS = 10000;
   var liveShift = null; // shift-start ms the last live count belongs to
   var tbToken = null;
   var cycleData = null; // { lastCycleS, runElapsedS, machineState, fetchedAtMs } — see fetchCycleData()
@@ -91,7 +91,7 @@
     var startTs = shiftStart - 3600000; // 1h lookback buffer for a baseline point
     var endTs = Date.now();
     var url = TB_BASE + "/api/plugins/telemetry/DEVICE/" + DEVICE_ID +
-      "/values/timeseries?keys=parts_total&startTs=" + startTs + "&endTs=" + endTs +
+      "/values/timeseries?keys=parts_total,actual_parts&startTs=" + startTs + "&endTs=" + endTs +
       "&orderBy=ASC&agg=NONE&limit=5000";
     return (tbToken ? Promise.resolve(tbToken) : tbLogin())
       .then(function (token) {
@@ -103,7 +103,13 @@
         return r.json();
       })
       .then(function (data) {
-        var pts = (data.parts_total || []).slice().sort(function (a, b) { return a.ts - b.ts; });
+        // 2026-09-30: match the HMI. Production reads the CNC's own parts counter
+        // ($AC_ACTUAL_PARTS -> `actual_parts`), which includes manual counter edits
+        // (e.g. +3 at 13:26 on 30 Sept). Use it whenever it was reported this shift;
+        // fall back to machine cycles (`parts_total`) only if it was not.
+        var apts = (data.actual_parts || []).filter(function (p) { return p.value !== null && p.value !== "" && Number(p.ts) >= shiftStart; });
+        var useHmi = apts.length > 0;
+        var pts = ((useHmi ? data.actual_parts : data.parts_total) || []).slice().sort(function (a, b) { return a.ts - b.ts; });
         var total = 0, prev = null;
         for (var i = 0; i < pts.length; i++) {
           var ts = Number(pts[i].ts), v = Number(pts[i].value);
@@ -114,7 +120,7 @@
           prev = v;
         }
         console.log("[cnc-patch] live OK: shiftStart=" + new Date(shiftStart).toISOString() +
-          " points=" + pts.length + " computed=" + total + " (prev count=" + count + ")");
+          " key=" + (useHmi ? "actual_parts" : "parts_total") + " points=" + pts.length + " computed=" + total + " (prev count=" + count + ")");
         count = total;
         source = "live";
         liveShift = shiftStart;
@@ -122,6 +128,25 @@
       .catch(function (e) {
         console.warn("[cnc-patch] live fetch failed:", e && e.message);
         if (liveShift === currentShiftStartMs() && count != null) return; // keep last live value for this shift
+        // 2026-09-30: ThingsBoard down -> Pi snapshot (branch `live`, pushed every 30 s by
+        // cnc-livesnap.service from the gateway's own state) before the hourly CSV.
+        return fetch("https://api.github.com/repos/ankitkumar-nps/cnc-live-demo/contents/live.json?ref=live",
+            { headers: { Accept: "application/vnd.github.raw+json" }, signal: AbortSignal.timeout(8000) })
+          .then(function (r) { if (!r.ok) throw new Error("snap HTTP " + r.status); return r.json(); })
+          .then(function (j) {
+            if (j && j.shiftParts != null && j.updatedTs >= currentShiftStartMs()) {
+              count = j.shiftParts; source = "live"; liveShift = currentShiftStartMs();
+              console.log("[cnc-patch] pi snapshot count: " + count);
+              return;
+            }
+            throw new Error("snapshot not for this shift");
+          })
+          .catch(function (e3) {
+            console.warn("[cnc-patch] snapshot failed, CSV fallback:", e3 && e3.message);
+            return fetchShiftCountFromCsv()
+              .then(function (csvCount) { if (csvCount != null) { count = csvCount; source = "csv"; } })
+              .catch(function () {});
+          });
         return fetchShiftCountFromCsv()
           .then(function (csvCount) {
             console.log("[cnc-patch] csv fallback result: " + csvCount + " (prev count=" + count + ")");
@@ -279,7 +304,7 @@
   function findTileRoot(labelNode) {
     var el = labelNode.parentElement;
     for (var lvl = 0; lvl < 4 && el; lvl++) {
-      var hasNum = textNodes(el).some(function (n) { return /^\d+$/.test(n.textContent.trim()); });
+      var hasNum = textNodes(el).some(function (n) { return /^(\d+|—)$/.test(n.textContent.trim()); });
       if (hasNum) return el;
       el = el.parentElement;
     }
@@ -297,7 +322,7 @@
     for (var i = 0; i < nodes.length; i++) {
       var t = nodes[i].textContent.trim();
       if (nodes[i] === node || /^from machine$/i.test(t)) continue;
-      if (numNode == null && /^\d+$/.test(t)) { numNode = nodes[i]; continue; }
+      if (numNode == null && /^(\d+|—)$/.test(t)) { numNode = nodes[i]; continue; }
       if (numNode != null && unitNode == null && /^(cycles|parts)$/i.test(t)) { unitNode = nodes[i]; continue; }
       if (unitNode != null && subtitleNode == null && t.length > 8) { subtitleNode = nodes[i]; continue; }
       if (subtitleNode != null && subtitleTailNode == null && /^\d+$/.test(t)) { subtitleTailNode = nodes[i]; continue; }
@@ -321,7 +346,7 @@
     var digitNode = null;
     var nodes = textNodes(aside);
     for (var i = 0; i < nodes.length; i++) {
-      if (/^\d+$/.test(nodes[i].textContent.trim()) && nodes[i].parentElement === labelNode.parentElement) {
+      if (/^(\d+|—)$/.test(nodes[i].textContent.trim()) && nodes[i].parentElement === labelNode.parentElement) {
         digitNode = nodes[i];
       }
     }
