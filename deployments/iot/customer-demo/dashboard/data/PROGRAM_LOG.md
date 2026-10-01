@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-10-01 14:31 IST_
+_Window: last 7 days · generated 2026-10-01 14:46 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,8 +7,8 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| BF_6_ID_ | 6 | 628 | 314 |
-| PFI_4894_ID | 3 | 369 | 184 |
+| BF_6_ID_ | 6 | 624 | 312 |
+| PFI_4894_ID | 3 | 371 | 185 |
 | BF_6"_OD_FINISH | 1 | 165 | 82 |
 | SPFH_4"_RW | 2 | 100 | 50 |
 | PFD_10"ID | 1 | 93 | 46 |
@@ -17,7 +17,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-09-24 | BF_6_ID_ | 85 | 42 |
+| 2026-09-24 | BF_6_ID_ | 81 | 40 |
 | 2026-09-25 | BF_6_ID_ | 191 | 95 |
 | 2026-09-26 | BF_6_ID_ | 110 | 55 |
 | 2026-09-26 | PFD_10"ID | 93 | 46 |
@@ -29,13 +29,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-09-29 | BF_6_ID_ | 18 | 9 |
 | 2026-09-29 | PFI_4894_ID | 79 | 39 |
 | 2026-09-30 | PFI_4894_ID | 180 | 90 |
-| 2026-10-01 | PFI_4894_ID | 110 | 55 |
+| 2026-10-01 | PFI_4894_ID | 112 | 56 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 09-24 14:31 | 09-24 23:53 | BF_6_ID_ | 85 |
+| 09-24 14:46 | 09-24 23:53 | BF_6_ID_ | 81 |
 | 09-25 06:10 | 09-25 08:41 | BF_6_ID_ | 34 |
 | 09-25 09:28 | 09-25 09:28 | BF_6_ID_ | 0 |
 | 09-25 09:35 | 09-25 12:15 | BF_6_ID_ | 30 |
@@ -57,4 +57,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 09-29 13:16 | 09-29 20:31 | PFI_4894_ID | 52 |
 | 09-29 20:34 | 09-30 20:57 | PFI_4894_ID | 181 |
 | 09-30 21:01 | 09-30 21:31 | PFI_4894_ID | 5 |
-| 09-30 21:42 | 10-01 14:30 | PFI_4894_ID | 131 |
+| 09-30 21:42 | 10-01 14:45 | PFI_4894_ID | 133 |
