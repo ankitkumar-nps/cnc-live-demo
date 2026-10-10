@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-10-11 02:00 IST_
+_Window: last 7 days · generated 2026-10-11 02:15 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,7 +7,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| PFD_8_ID_FINISH | 7 | 839 | 419 |
+| PFD_8_ID_FINISH | 7 | 841 | 420 |
 | PFH_8"16"IDFINISH | 2 | 161 | 80 |
 | PFHR_8_506_ID_FINISH | 1 | 4 | 2 |
 
@@ -24,13 +24,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-10-09 | PFD_8_ID_FINISH | 133 | 66 |
 | 2026-10-10 | PFD_8_ID_FINISH | 127 | 63 |
 | 2026-10-10 | PFHR_8_506_ID_FINISH | 4 | 2 |
-| 2026-10-11 | PFD_8_ID_FINISH | 16 | 8 |
+| 2026-10-11 | PFD_8_ID_FINISH | 18 | 9 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 10-04 02:01 | 10-04 05:17 | PFD_8_ID_FINISH | 0 |
+| 10-04 02:15 | 10-04 05:17 | PFD_8_ID_FINISH | 0 |
 | 10-04 06:39 | 10-04 07:45 | PFD_8_ID_FINISH | 0 |
 | 10-04 08:27 | 10-04 08:28 | PFD_8_ID_FINISH | 0 |
 | 10-04 08:46 | 10-04 08:50 | PFD_8_ID_FINISH | 0 |
@@ -44,4 +44,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 10-09 18:32 | 10-09 18:55 | PFD_8_ID_FINISH | 2 |
 | 10-09 18:58 | 10-10 20:06 | PFD_8_ID_FINISH | 140 |
 | 10-10 20:06 | 10-10 20:50 | PFHR_8_506_ID_FINISH | 4 |
-| 10-10 20:50 | 10-11 02:00 | PFD_8_ID_FINISH | 36 |
+| 10-10 20:50 | 10-11 02:14 | PFD_8_ID_FINISH | 38 |
