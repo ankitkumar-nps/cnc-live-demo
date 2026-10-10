@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-10-10 07:45 IST_
+_Window: last 7 days · generated 2026-10-10 08:00 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,16 +7,16 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| PFD_8_ID_FINISH | 7 | 789 | 394 |
+| PFD_8_ID_FINISH | 7 | 791 | 395 |
 | PFH_8"16"IDFINISH | 2 | 161 | 80 |
-| PFI_4894_ID | 1 | 20 | 10 |
+| PFI_4894_ID | 1 | 19 | 9 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
 | 2026-10-03 | PFD_8_ID_FINISH | 47 | 23 |
-| 2026-10-03 | PFI_4894_ID | 20 | 10 |
+| 2026-10-03 | PFI_4894_ID | 19 | 9 |
 | 2026-10-05 | PFD_8_ID_FINISH | 183 | 91 |
 | 2026-10-06 | PFD_8_ID_FINISH | 160 | 80 |
 | 2026-10-06 | PFH_8"16"IDFINISH | 49 | 24 |
@@ -24,13 +24,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-10-07 | PFH_8"16"IDFINISH | 112 | 56 |
 | 2026-10-08 | PFD_8_ID_FINISH | 159 | 79 |
 | 2026-10-09 | PFD_8_ID_FINISH | 133 | 66 |
-| 2026-10-10 | PFD_8_ID_FINISH | 46 | 23 |
+| 2026-10-10 | PFD_8_ID_FINISH | 48 | 24 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 10-03 07:45 | 10-03 08:08 | PFI_4894_ID | 2 |
+| 10-03 08:00 | 10-03 08:08 | PFI_4894_ID | 1 |
 | 10-03 08:14 | 10-03 12:55 | PFI_4894_ID | 18 |
 | 10-03 12:56 | 10-03 12:56 | SPFD_8_FINISH | 0 |
 | 10-03 12:57 | 10-03 12:57 | PFH_8"16"IDFINISH | 0 |
@@ -48,4 +48,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 10-07 15:34 | 10-07 15:34 | PFI_4894_OD | 0 |
 | 10-07 15:34 | 10-09 18:11 | PFD_8_ID_FINISH | 316 |
 | 10-09 18:32 | 10-09 18:55 | PFD_8_ID_FINISH | 2 |
-| 10-09 18:58 | 10-10 07:45 | PFD_8_ID_FINISH | 79 |
+| 10-09 18:58 | 10-10 07:59 | PFD_8_ID_FINISH | 81 |
