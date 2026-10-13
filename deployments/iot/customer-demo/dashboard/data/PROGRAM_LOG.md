@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-10-13 19:00 IST_
+_Window: last 7 days · generated 2026-10-13 19:15 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,15 +7,15 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| PFD_8_ID_FINISH | 7 | 690 | 345 |
-| PFH_8"16"IDFINISH | 2 | 161 | 80 |
+| PFD_8_ID_FINISH | 7 | 691 | 345 |
+| PFH_8"16"IDFINISH | 2 | 160 | 80 |
 | PFHR_8_506_ID_FINISH | 1 | 4 | 2 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-10-06 | PFH_8"16"IDFINISH | 49 | 24 |
+| 2026-10-06 | PFH_8"16"IDFINISH | 48 | 24 |
 | 2026-10-07 | PFD_8_ID_FINISH | 61 | 30 |
 | 2026-10-07 | PFH_8"16"IDFINISH | 112 | 56 |
 | 2026-10-08 | PFD_8_ID_FINISH | 159 | 79 |
@@ -24,13 +24,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-10-10 | PFHR_8_506_ID_FINISH | 4 | 2 |
 | 2026-10-11 | PFD_8_ID_FINISH | 41 | 20 |
 | 2026-10-12 | PFD_8_ID_FINISH | 94 | 47 |
-| 2026-10-13 | PFD_8_ID_FINISH | 75 | 37 |
+| 2026-10-13 | PFD_8_ID_FINISH | 76 | 38 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 10-06 19:00 | 10-07 15:11 | PFH_8"16"IDFINISH | 161 |
+| 10-06 19:16 | 10-07 15:11 | PFH_8"16"IDFINISH | 160 |
 | 10-07 15:12 | 10-07 15:12 | SPFD_8_FINISH | 0 |
 | 10-07 15:12 | 10-07 15:33 | PFD_8_ID_FINISH | 2 |
 | 10-07 15:33 | 10-07 15:33 | PFH_8"16"IDFINISH | 0 |
@@ -41,4 +41,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 10-10 20:06 | 10-10 20:50 | PFHR_8_506_ID_FINISH | 4 |
 | 10-10 20:50 | 10-11 05:27 | PFD_8_ID_FINISH | 61 |
 | 10-12 06:01 | 10-13 14:43 | PFD_8_ID_FINISH | 157 |
-| 10-13 14:54 | 10-13 19:00 | PFD_8_ID_FINISH | 12 |
+| 10-13 14:54 | 10-13 19:14 | PFD_8_ID_FINISH | 13 |
