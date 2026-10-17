@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-10-17 20:30 IST_
+_Window: last 7 days · generated 2026-10-17 20:46 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -8,7 +8,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
 | PFD_8_ID_FINISH | 5 | 260 | 130 |
-| SPFD_6_OD_ROUGH | 2 | 133 | 66 |
+| SPFD_6_OD_ROUGH | 2 | 137 | 68 |
 | SPFD_10_OD_ROUGH | 2 | 92 | 46 |
 | SPFD_6"_ID_FINISH | 2 | 71 | 35 |
 | SPFH_10_OD_ROUGH | 1 | 38 | 19 |
@@ -18,14 +18,12 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | SPFH_350_16_OD | 1 | 7 | 3 |
 | SPFHR_6_406_ID | 1 | 6 | 3 |
 | SPFHR_6_406_OD | 1 | 6 | 3 |
-| PFHR_8_506_ID_FINISH | 1 | 2 | 1 |
 
 ## By day × program
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
 | 2026-10-10 | PFD_8_ID_FINISH | 20 | 10 |
-| 2026-10-10 | PFHR_8_506_ID_FINISH | 2 | 1 |
 | 2026-10-11 | PFD_8_ID_FINISH | 41 | 20 |
 | 2026-10-12 | PFD_8_ID_FINISH | 94 | 47 |
 | 2026-10-13 | PFD_8_ID_FINISH | 97 | 48 |
@@ -43,13 +41,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-10-16 | SPFD_6"_ID_FINISH | 6 | 3 |
 | 2026-10-16 | SPFD_6_OD_ROUGH | 70 | 35 |
 | 2026-10-17 | SPFD_6"_ID_FINISH | 65 | 32 |
-| 2026-10-17 | SPFD_6_OD_ROUGH | 63 | 31 |
+| 2026-10-17 | SPFD_6_OD_ROUGH | 67 | 33 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 10-10 20:31 | 10-10 20:50 | PFHR_8_506_ID_FINISH | 2 |
+| 10-10 20:46 | 10-10 20:50 | PFHR_8_506_ID_FINISH | 0 |
 | 10-10 20:50 | 10-11 05:27 | PFD_8_ID_FINISH | 61 |
 | 10-12 06:01 | 10-13 14:43 | PFD_8_ID_FINISH | 157 |
 | 10-13 14:54 | 10-14 02:00 | PFD_8_ID_FINISH | 42 |
@@ -72,4 +70,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 10-16 15:51 | 10-16 15:55 | PFD_6_OD_1ST | 0 |
 | 10-16 15:55 | 10-16 22:18 | SPFD_6_OD_ROUGH | 70 |
 | 10-16 22:18 | 10-17 12:00 | SPFD_6"_ID_FINISH | 71 |
-| 10-17 12:01 | 10-17 20:29 | SPFD_6_OD_ROUGH | 63 |
+| 10-17 12:01 | 10-17 20:45 | SPFD_6_OD_ROUGH | 67 |
