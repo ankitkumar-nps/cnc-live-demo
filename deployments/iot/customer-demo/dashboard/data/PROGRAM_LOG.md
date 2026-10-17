@@ -1,5 +1,5 @@
 # Pashupati CNC — Program-wise Production Log
-_Window: last 7 days · generated 2026-10-17 14:30 IST_
+_Window: last 7 days · generated 2026-10-17 14:45 IST_
 
 Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/tooling scripts (MIRROR, TESTBAR etc.) excluded.
 
@@ -7,8 +7,8 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Program (script) | Days active | Cutting cycles | ≈ Pieces |
 |---|---:|---:|---:|
-| PFD_8_ID_FINISH | 5 | 291 | 145 |
-| SPFD_6_OD_ROUGH | 2 | 98 | 49 |
+| PFD_8_ID_FINISH | 5 | 289 | 144 |
+| SPFD_6_OD_ROUGH | 2 | 101 | 50 |
 | SPFD_10_OD_ROUGH | 2 | 92 | 46 |
 | SPFD_6"_ID_FINISH | 2 | 71 | 35 |
 | SPFH_10_OD_ROUGH | 1 | 38 | 19 |
@@ -24,7 +24,7 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 
 | Date | Program (script) | Cutting cycles | ≈ Pieces |
 |---|---|---:|---:|
-| 2026-10-10 | PFD_8_ID_FINISH | 51 | 25 |
+| 2026-10-10 | PFD_8_ID_FINISH | 49 | 24 |
 | 2026-10-10 | PFHR_8_506_ID_FINISH | 4 | 2 |
 | 2026-10-11 | PFD_8_ID_FINISH | 41 | 20 |
 | 2026-10-12 | PFD_8_ID_FINISH | 94 | 47 |
@@ -43,13 +43,13 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 2026-10-16 | SPFD_6"_ID_FINISH | 6 | 3 |
 | 2026-10-16 | SPFD_6_OD_ROUGH | 70 | 35 |
 | 2026-10-17 | SPFD_6"_ID_FINISH | 65 | 32 |
-| 2026-10-17 | SPFD_6_OD_ROUGH | 28 | 14 |
+| 2026-10-17 | SPFD_6_OD_ROUGH | 31 | 15 |
 
 ## Program run timeline
 
 | Start (IST) | End (IST) | Program (script) | Cycles |
 |---|---|---|---:|
-| 10-10 14:31 | 10-10 20:06 | PFD_8_ID_FINISH | 31 |
+| 10-10 14:46 | 10-10 20:06 | PFD_8_ID_FINISH | 29 |
 | 10-10 20:06 | 10-10 20:50 | PFHR_8_506_ID_FINISH | 4 |
 | 10-10 20:50 | 10-11 05:27 | PFD_8_ID_FINISH | 61 |
 | 10-12 06:01 | 10-13 14:43 | PFD_8_ID_FINISH | 157 |
@@ -73,4 +73,4 @@ Counts = **cutting cycles** (≈2× physical pieces on multi-op parts). Test/too
 | 10-16 15:51 | 10-16 15:55 | PFD_6_OD_1ST | 0 |
 | 10-16 15:55 | 10-16 22:18 | SPFD_6_OD_ROUGH | 70 |
 | 10-16 22:18 | 10-17 12:00 | SPFD_6"_ID_FINISH | 71 |
-| 10-17 12:01 | 10-17 14:30 | SPFD_6_OD_ROUGH | 28 |
+| 10-17 12:01 | 10-17 14:45 | SPFD_6_OD_ROUGH | 31 |
